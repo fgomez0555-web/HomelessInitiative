@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>West Hollywood Homeless Initiative — Dashboard</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 14px; }
+
+/* HEADER */
+.header { background: #003087; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.header-title { color: #fff; font-size: 19px; font-weight: 700; }
+.header-sub { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; }
+.header-right { text-align: right; flex-shrink: 0; }
+.header-label { color: rgba(255,255,255,0.6); font-size: 11px; }
+.header-val { color: #fff; font-size: 12px; font-weight: 700; margin-top: 2px; }
+.header-logo { height: 78px; width: auto; border-radius: 6px; display: block; flex-shrink: 0; }
+.header-divider { width: 1px; height: 44px; background: rgba(255,255,255,0.25); flex-shrink: 0; }
+
+/* PAGE NAV */
+.page-nav { background: #fff; border-bottom: 1px solid #dce3ef; padding: 0 28px; display: flex; }
+.page-tab { padding: 12px 20px; font-size: 13px; font-weight: 700; color: #6b7a99; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+.page-tab:hover { color: #003087; background: #f8faff; }
+.page-tab.active { color: #003087; border-bottom-color: #003087; }
+.page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
+
+/* LAYOUT */
+.content { padding: 22px 28px 8px; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* CONTEXT BANNER */
+.ctx { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 12px 18px; margin-bottom: 18px; font-size: 13px; color: #2d3748; line-height: 1.7; }
+
+/* KPI CARDS */
+.kpi-row { display: grid; gap: 12px; margin-bottom: 18px; }
+.k4 { grid-template-columns: repeat(4,1fr); }
+.k3 { grid-template-columns: repeat(3,1fr); }
+.k2 { grid-template-columns: repeat(2,1fr); }
+.kpi { background: #fff; border-radius: 8px; padding: 16px 18px; border-top: 3px solid #003087; box-shadow: 0 1px 4px rgba(0,0,135,0.06); }
+.kpi.accent2 { border-top-color: #1a7abf; }
+.kpi.accent3 { border-top-color: #5B9BD5; }
+.kpi-label { font-size: 10px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+.kpi-value { font-size: 28px; font-weight: 700; color: #003087; line-height: 1; }
+.kpi-value.sm { font-size: 22px; }
+.kpi-sub { font-size: 12px; color: #5a6a88; margin-top: 5px; }
+
+/* CHART GRID */
+.cgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 18px; }
+.card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); overflow: hidden; }
+.card.full { grid-column: span 2; }
+.ct { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; }
+.cn { font-size: 12px; color: #5a6a88; margin-bottom: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 11px; color: #6b7a99; align-items: center; }
+.ls { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+canvas { display: block; max-width: 100%; }
+
+/* BAR ROWS */
+.br { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.bl { font-size: 12px; color: #2d3748; width: 172px; flex-shrink: 0; text-align: right; line-height: 1.3; }
+.bt { flex: 1; background: #eef1f8; border-radius: 4px; height: 22px; overflow: hidden; }
+.bf { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; color: #fff; font-weight: 700; min-width: 32px; }
+
+/* STAT TABLE */
+.st { width: 100%; border-collapse: collapse; font-size: 12px; }
+.st td { padding: 9px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; line-height: 1.5; font-size:13px; }
+.st td:first-child { color: #2d3748; }
+.st td:last-child { text-align: right; font-weight: 700; color: #003087; white-space: nowrap; }
+.st tr:last-child td { border-bottom: none; }
+.st .grp td { background: #f8faff; font-weight: 700; font-size: 11px; color: #003087; padding-top: 10px; border-bottom: none; }
+.st .sub td:first-child { color: #9aa5be; padding-left: 18px; font-size: 11px; }
+.st .sub td:last-child { color: #6b7a99; font-size: 11px; }
+
+
+/* FLOW */
+.flow { display: flex; gap: 0; margin-bottom: 18px; }
+.fs { flex: 1; background: #f8faff; border: 1px solid #dce3ef; border-radius: 8px; padding: 14px 15px; position: relative; }
+.fs + .fs { margin-left: 26px; }
+.fs::before { content:''; position:absolute; left:-18px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:9px solid transparent; border-bottom:9px solid transparent; border-left:11px solid #003087; }
+.fs:first-child::before { display:none; }
+.fn { width:24px; height:24px; background:#003087; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; margin-bottom:7px; }
+.ft { font-size:12px; font-weight:700; color:#003087; margin-bottom:3px; }
+.fd { font-size:12px; color:#4a5568; line-height:1.5; }
+
+/* RESPONDERS */
+.rg { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+.rc { background:#fff; border-radius:8px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,135,0.06); border-left:5px solid #003087; }
+.rc.s { border-left-color:#5B9BD5; }
+.rn { font-size:13px; font-weight:700; color:#003087; margin-bottom:4px; }
+.rc.s .rn { color:#1a7abf; }
+.rh { font-size:11px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
+.rf { font-size:12px; color:#4a5568; line-height:1.5; }
+.rb { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; margin-bottom:7px; background:#003087; color:#fff; }
+.rc.s .rb { background:#eef1f8; color:#6b7a99; }
+
+/* TAKEAWAY */
+.tg { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:18px; }
+.tk { background:#fff; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,135,0.06); display:flex; gap:12px; align-items:flex-start; }
+.ti { width:32px; height:32px; border-radius:50%; background:#003087; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.tt { font-size:13px; color:#2d3748; line-height:1.6; }
+.tt strong { color:#003087; display:block; margin-bottom:3px; font-size:13px; }
+
+/* HOLLOWAY */
+
+/* FOOTNOTE */
+.fn-text { font-size:11px; color:#5a6a88; font-style:italic; margin-top:8px; line-height:1.5; }
+
+/* FOOTER */
+.footer { margin-top:12px; padding:14px 0 4px; border-top:1px solid #dce3ef; display:flex; justify-content:space-between; font-size:11px; color:#5a6a88; }
+
+@media(max-width:900px){
+  .k4,.k3{grid-template-columns:repeat(2,1fr);}
+  .cgrid,.rg,.tg,.svc-grid{grid-template-columns:1fr;}
+  .card.full{grid-column:span 1;}
+  .flow{flex-direction:column;gap:10px;}
+  .fs{margin-left:0!important;}
+  .fs::before{display:none;}
+  .header{flex-direction:column;align-items:flex-start;gap:10px;}
+}
+
+/* SERVICE CATEGORIES */
+.svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
+.svc-card { background:#fff; border-radius:8px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,135,0.06); }
+.svc-icon { font-size:22px; margin-bottom:8px; }
+.svc-title { font-size:13px; font-weight:700; color:#003087; margin-bottom:5px; }
+.svc-desc { font-size:12px; color:#4a5568; line-height:1.5; }
+
+/* CRF BANNER */
+.crf-banner { background:#fff; border-radius:8px; padding:18px 20px; box-shadow:0 1px 4px rgba(0,0,135,0.06); border-left:5px solid #003087; margin-bottom:18px; }
+.crf-label { display:inline-block; font-size:10px; font-weight:700; background:#003087; color:#fff; padding:2px 8px; border-radius:10px; margin-bottom:8px; letter-spacing:0.4px; }
+.crf-title { font-size:15px; font-weight:700; color:#003087; margin-bottom:6px; }
+.crf-body { font-size:13px; color:#2d3748; line-height:1.7; }
+.crf-body strong { color:#003087; }
+
+@media(max-width:900px){
+  .svc-grid { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">West Hollywood Homeless Initiative</div>
+    <div class="header-sub">Serving the community &nbsp;·&nbsp; Program outcomes &nbsp;·&nbsp; FY 2025–26</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
+    <img class="header-logo" src="data:image/png;base64,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uzdVVlbSqVOnLpoHXYu6ywKgESNG0PHjx4mIaO/evfTmm2/S+++/T0VFRUREtGbNGmrXrh2/fujQoURENGfOHF4WI0BhYSG98sorQfuoV1xxBZ09e5aIiB5++OGgARpu1yAtLY1Wr15NREQrVqygJ554gpYvX05ERNu2baO0tDRePpsA2HYZ+z5UH7K/X3nlFSIiOnToECUnJwe5kgKge++9l4iIKioqKCsri2/faZrG9/eJiNauXUtPP/00vfPOO+Tz+Wj//v1868xsNtN7771HRESrVq2iuXPn0l/+8heqra2l4uJi6t69O3eX/eyzz3jbpk+fzveI9e6y6enpVFVVRfv37+d+C6L7MAC66667iIho9uzZvM1XXnklFRYWksPhoNdee41++9vf0ubNm4mI6B//+Aef5Dp37kxERHl5ebzP/vWvfxER8e0p9tzExETaunUrFwaiyy4rb+zYscQwduxYviO0aNEiIiLavn079+dgW3j33XcfBQIB+u6772j+/Pm0YMECOn78OHk8Hpo2bRp/TmJiIq1atYr371NPPcXr+sUXX1B2djafKK+55ho6e/YsVVRU0J///GdasGABFRYWUmVlJVVXV3NXYNbPF5p7fFI3GAy/D6W+XQiXWYvFgqKiIqxduxY2mw3Z2dno378/srKyUFxcjAULFuAPf/gDampquJVb0zRkZmZi06ZNKCwsRFxcHAoLC2EwGNChQwc4nU6sX78eHo8HmqahqqoKw4cPR0ZGBmbPno2amppG28Y8zNatW4e6ujoMHToUQ4cORXx8PF599VU8/vjjqK2thaZp8Pl8SE5ORmpqKvLz87mFuzEVGAAaGhrQunVrrFixAlu3buVtYyq/zWZDRkYGNm7ciPz8fO7WydTlDRs24OzZsxgyZAiGDRuG1NRUrFy5Eo888gh3qQ0EAvj000/hdDoxYMAADBs2DNnZ2di0aRN+/etfo7CwkK83i4qKkJycjIyMDHz11Vc4cOBAkNFUNJZ27NgRBw4c4B59+qUa649169ahqKgImqahoqIC69evR1JSEoYOHYpBgwbBbrfj97//PV5++WXedpPJhKysLHz11VfYuXMnDAYD2rVrB5vNho0bN6Kuro7vxLhcLmRlZWHkyJH4wx/+gMOHD3M7D6tLbW0tkpKSsG/fPnzwwQdwu90IBAKor69Hq1atsGTJ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" alt="City of West Hollywood">
+  </div>
+</div>
+
+<div class="page-nav" role="tablist">
+  <div class="page-tab active" role="tab" aria-selected="true" tabindex="0"
+    onclick="showPage('overview',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('overview',this)">System Overview</div>
+  <div class="page-tab" role="tab" aria-selected="false" tabindex="0"
+    onclick="showPage('hcl',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('hcl',this)">Homeless Concern Line</div>
+  <div class="page-tab" role="tab" aria-selected="false" tabindex="0"
+    onclick="showPage('housing',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('housing',this)">Housing Outcomes</div>
+  <div class="page-tab" role="tab" aria-selected="false" tabindex="0"
+    onclick="showPage('prevention',this)" onkeydown="if(event.key==='Enter'||event.key===' ')showPage('prevention',this)">Prevention &amp; Services</div>
+</div>
+
+<div class="content">
+
+<!-- ═══════════ PAGE 1: SYSTEM OVERVIEW ═══════════ -->
+<div class="page active" id="page-overview">
+
+  <div class="ctx">
+    Since 2018, West Hollywood has invested approximately <strong>$8 million per year</strong> — about 5% of the City's operating budget — in a coordinated system of services, which includes services to address and prevent homelessness. That system has helped <strong>411 people find permanent housing</strong>, placed <strong>781 individuals in interim shelter</strong>, and provided <strong>over 1,800 households</strong> with rental assistance to prevent homelessness. The initiative is now evolving with a new Coordinated Response Framework — building on what's working to serve the community even better.
+  </div>
+
+  <div class="kpi-row k4">
+    <div class="kpi">
+      <div class="kpi-label">People permanently housed</div>
+      <div class="kpi-value">411</div>
+      <div class="kpi-sub">Since 2016</div>
+    </div>
+    <div class="kpi accent2">
+      <div class="kpi-label">Placed in interim shelter</div>
+      <div class="kpi-value">781</div>
+      <div class="kpi-sub">New admissions since 2017</div>
+    </div>
+    <div class="kpi accent3">
+      <div class="kpi-label">Rental assistance grants</div>
+      <div class="kpi-value">1,861</div>
+      <div class="kpi-sub">Households helped since 2017</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Concern Line calls answered</div>
+      <div class="kpi-value kpi-sm">993</div>
+      <div class="kpi-sub">Jul 2025 – Mar 2026</div>
+    </div>
+  </div>
+
+  <!-- SYSTEM FLOW -->
+  <div class="card full" style="margin-bottom:18px;">
+    <div class="ct">How the system works</div>
+    <div class="cn">A coordinated path — from first contact to a permanent home</div>
+    <div class="flow" style="margin-top:12px;">
+      <div class="fs">
+        <div class="fn">1</div>
+        <div class="ft">Someone reaches out</div>
+        <div class="fd">A community member, City staff, or Safety Ambassador contacts the Homeless Concern Line (323-848-6590) to report a concern or request help.</div>
+      </div>
+      <div class="fs">
+        <div class="fn">2</div>
+        <div class="ft">A team responds</div>
+        <div class="fd">A trained outreach team is dispatched — day or night — to engage the individual, assess their needs, and connect them with services.</div>
+      </div>
+      <div class="fs">
+        <div class="fn">3</div>
+        <div class="ft">Shelter when ready</div>
+        <div class="fd">When someone is ready for housing, they can enter interim shelter — including the Holloway Interim Housing Program, West Hollywood's first in-city facility.</div>
+      </div>
+      <div class="fs">
+        <div class="fn">4</div>
+        <div class="ft">A permanent home</div>
+        <div class="fd">Case managers work with each person to secure permanent housing, apply for benefits, and access the support they need to stay housed long-term.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNDED SERVICES -->
+  <div style="margin-bottom:10px;">
+    <div class="ct">What the City funds</div>
+    <div class="cn">The City funds services across six core areas</div>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card">
+      <div class="svc-icon">&#128226;</div>
+      <div class="svc-title">Street outreach &amp; crisis response</div>
+      <div class="svc-desc">Trained teams reach people where they are — providing care, connecting them to services, and responding to behavioral health crises 24/7.</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-icon">&#127968;</div>
+      <div class="svc-title">Interim &amp; emergency shelter</div>
+      <div class="svc-desc">Short-term housing for individuals while they work toward a permanent home — including the new Holloway facility and youth shelter services.</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-icon">&#128274;</div>
+      <div class="svc-title">Permanent housing placement</div>
+      <div class="svc-desc">Case managers connect individuals to permanent supportive housing, rental vouchers, and long-term stability — 411 people housed since 2016.</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-icon">&#128188;</div>
+      <div class="svc-title">Rental assistance &amp; eviction prevention</div>
+      <div class="svc-desc">Financial help for households at risk of losing their housing — including emergency grants, rental assistance for older adults, and eviction defense.</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-icon">&#127973;</div>
+      <div class="svc-title">Health &amp; recovery services</div>
+      <div class="svc-desc">Medical care, behavioral health support, substance use recovery, and services for people living with HIV/AIDS — helping individuals stabilize and rebuild.</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-icon">&#9878;&#65039;</div>
+      <div class="svc-title">Legal services &amp; tenant rights</div>
+      <div class="svc-desc">Free legal help to prevent evictions, protect tenant rights, and navigate benefits — keeping vulnerable households from falling into homelessness.</div>
+    </div>
+  </div>
+
+  <!-- CRF BANNER -->
+  <div class="crf-banner">
+    <div class="crf-label">What&#39;s next</div>
+    <div class="crf-title">Building on success: the Coordinated Response Framework</div>
+    <div class="crf-body">
+      West Hollywood's Homeless Initiative has delivered real results — 411 people permanently housed, a new in-city shelter, and a 24/7 concern line fielding nearly 1,000 calls in its first nine months. The City is now developing a <strong>Coordinated Response Framework (CRF)</strong> to strengthen how these services connect. The CRF will improve coordination across outreach teams, shelter providers, and housing programs — ensuring that people move more smoothly through the system and that the City's investment delivers the greatest possible impact.
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════ PAGE 2: HCL ═══════════ -->
+<div class="page" id="page-hcl">
+
+  <div class="ctx">
+    The Homeless Concern Line (323-848-6590) is West Hollywood's non-emergency number for homelessness-related concerns. Anyone — residents, visitors, City staff, or businesses — can call to request outreach or services for someone they are concerned about. Calls are answered 24/7 and routed to a trained response team.
+  </div>
+
+  <div class="kpi-row k4">
+    <div class="kpi">
+      <div class="kpi-label">Total requests</div>
+      <div class="kpi-value">993</div>
+      <div class="kpi-sub">Jul 2025 – Mar 2026</div>
+    </div>
+    <div class="kpi kpi-sm">
+      <div class="kpi-label">Daily average</div>
+      <div class="kpi-value sm">~4</div>
+      <div class="kpi-sub">Overall; recent months 6–7/day</div>
+    </div>
+    <div class="kpi kpi-sm">
+      <div class="kpi-label">Median response time</div>
+      <div class="kpi-value sm">10 min</div>
+      <div class="kpi-sub">Dispatch to arrival on scene</div>
+    </div>
+    <div class="kpi kpi-sm">
+      <div class="kpi-label">Within 15 minutes</div>
+      <div class="kpi-value sm">73%</div>
+      <div class="kpi-sub">Of all field engagements</div>
+    </div>
+  </div>
+
+  <!-- FLOW -->
+  <div class="card full" style="margin-bottom:18px;">
+    <div class="ct">How HCL requests are handled</div>
+    <div class="cn">Every request follows a consistent four-step pathway</div>
+    <div class="flow" style="margin-top:12px;">
+      <div class="fs"><div class="fn">1</div><div class="ft">Request received</div><div class="fd">Community members, City staff, or individuals contact the line.</div></div>
+      <div class="fs"><div class="fn">2</div><div class="ft">Triage &amp; dispatch</div><div class="fd">Routed by need and time of day to the appropriate outreach team.</div></div>
+      <div class="fs"><div class="fn">3</div><div class="ft">Field response</div><div class="fd">Team engages on-scene, assesses needs, provides services or referrals.</div></div>
+      <div class="fs"><div class="fn">4</div><div class="ft">Outcome documented</div><div class="fd">Each interaction is logged for follow-up and program reporting.</div></div>
+    </div>
+  </div>
+
+  <!-- RESPONDERS -->
+  <div style="margin-bottom:10px;"><div class="ct">Response teams</div><div class="cn">Two 24/7 teams with defined lead roles by time of day</div></div>
+  <div class="rg">
+    <div class="rc">
+      <div class="rb">Day lead — 7 AM to 7 PM</div>
+      <div class="rn">Healthcare in Action (HIA)</div>
+      <div class="rh">Backup support available overnight</div>
+      <div class="rf">Medical care, behavioral health, ongoing client engagement. Also places clients in transitional housing through its street medicine program.</div>
+    </div>
+    <div class="rc s">
+      <div class="rb">Night lead — 7 PM to 7 AM</div>
+      <div class="rn">WeHo Care Team (Sycamores)</div>
+      <div class="rh">Backup support available daytime</div>
+      <div class="rf">Behavioral health response, de-escalation, and social service linkage for overnight and weekend needs.</div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="cgrid">
+    <div class="card">
+      <div class="ct">Daily request rate — by month</div>
+      <div class="cn">Requests per day; July and March are partial months</div>
+      <canvas id="c-monthly" height="200"></canvas>
+      <p class="fn-text">Rates shown for fair comparison across full and partial months. Jul: Jul 15–31 (17 days) · Mar: Mar 1–15 (15 days).</p>
+    </div>
+    <div class="card">
+      <div class="ct">Why people reach out</div>
+      <div class="cn">Over 84% of requests are care-oriented</div>
+      <div id="bars-reasons" style="margin-top:6px;"></div>
+    </div>
+  </div>
+
+  <div class="cgrid">
+    <div class="card">
+      <div class="ct">Outcomes</div>
+      <div class="cn">Of those successfully reached, 63% accepted services</div>
+      <canvas id="c-outcomes" height="250"></canvas>
+      <p class="fn-text">"Unable to locate" is expected in street-based outreach — individuals are mobile and may have moved before the team arrives. All attempts are documented.</p>
+    </div>
+    <div class="card">
+      <div class="ct">When calls come in</div>
+      <div class="cn">Nearly all activity occurs between 6 AM and 6 PM</div>
+      <canvas id="c-time" height="160"></canvas>
+      <div class="ct" style="margin-top:16px;margin-bottom:3px;">Calls by day of the week</div>
+      <div class="cn">Fridays are the busiest day</div>
+      <canvas id="c-dow" height="140"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════ PAGE 3: HOUSING OUTCOMES ═══════════ -->
+<div class="page" id="page-housing">
+
+  <div class="ctx">
+    West Hollywood's housing programs have made steady progress in connecting people with permanent homes. 2024 was a record year — 72 individuals were permanently housed, the highest annual total since 2017. The Holloway Interim Housing Program, the City's first in-city shelter, opened in October 2025 and was fully occupied within weeks of launch.
+  </div>
+
+  <div class="kpi-row k3">
+    <div class="kpi">
+      <div class="kpi-label">People permanently housed</div>
+      <div class="kpi-value">411</div>
+      <div class="kpi-sub">Since 2016</div>
+    </div>
+    <div class="kpi accent2">
+      <div class="kpi-label">Placed in interim shelter</div>
+      <div class="kpi-value">781</div>
+      <div class="kpi-sub">New admissions since 2017</div>
+    </div>
+    <div class="kpi accent3">
+      <div class="kpi-label">Combined shelter bed nights</div>
+      <div class="kpi-value">56,156</div>
+      <div class="kpi-sub">Across all shelter providers</div>
+    </div>
+  </div>
+
+  <div class="cgrid">
+    <div class="card">
+      <div class="ct">Permanent housing placements — by year</div>
+      <div class="cn">2024 was a record year with 72 people permanently housed</div>
+      <canvas id="c-perm" height="220"></canvas>
+      <p class="fn-text">2025 figures are year-to-date and do not reflect the full year.</p>
+    </div>
+    <div class="card">
+      <div class="ct">Interim housing admissions — by year</div>
+      <div class="cn">Admissions have grown steadily as shelter capacity expanded</div>
+      <canvas id="c-interim" height="220"></canvas>
+      <p class="fn-text">2025 figures are year-to-date. The Holloway program (20 beds) opened October 2025 and is not reflected in this chart.</p>
+    </div>
+  </div>
+
+  <!-- HOLLOWAY -->
+  <div style="margin-bottom:10px;">
+    <div class="ct">Holloway Interim Housing Program — Q1 Status (Oct–Dec 2025)</div>
+    <div class="cn">West Hollywood's first in-city shelter · 20 beds · Opened October 2025</div>
+  </div>
+  <div class="kpi-row k4">
+    <div class="kpi">
+      <div class="kpi-label">Individuals served</div>
+      <div class="kpi-value">24</div>
+      <div class="kpi-sub">All experiencing long-term homelessness in West Hollywood</div>
+    </div>
+    <div class="kpi accent2">
+      <div class="kpi-label">Engaged in housing planning</div>
+      <div class="kpi-value">22</div>
+      <div class="kpi-sub">Of 24 individuals served in Q1</div>
+    </div>
+    <div class="kpi accent3">
+      <div class="kpi-label">Permanent housing placements</div>
+      <div class="kpi-value">1</div>
+      <div class="kpi-sub">3 more anticipated by Feb 2026</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Current waitlist</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-sub">Eligible West Hollywood residents</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════ PAGE 4: PREVENTION & SERVICES ═══════════ -->
+<div class="page" id="page-prevention">
+
+  <div class="ctx">
+    Beyond outreach and housing, West Hollywood funds a range of services that prevent homelessness and support stability — including rental assistance, eviction defense, legal advocacy, and specialized services for older adults and people living with HIV/AIDS. Since 2018, over $2.6 million has been provided directly to households in need.
+  </div>
+
+  <div class="kpi-row k3">
+    <div class="kpi">
+      <div class="kpi-label">Direct rental assistance (since 2018)</div>
+      <div class="kpi-value">$2.6M+</div>
+      <div class="kpi-sub">Provided to households in need</div>
+    </div>
+    <div class="kpi accent2">
+      <div class="kpi-label">Rental assistance grants (all-time)</div>
+      <div class="kpi-value">1,861</div>
+      <div class="kpi-sub">Households helped since 2017</div>
+    </div>
+    <div class="kpi accent3">
+      <div class="kpi-label">Households assisted (2025 YTD)</div>
+      <div class="kpi-value">108</div>
+      <div class="kpi-sub">Rental assistance this fiscal year</div>
+    </div>
+  </div>
+
+  <div class="cgrid">
+    <div class="card">
+      <div class="ct">Rental assistance — households served by year</div>
+      <div class="cn">2021 spike reflects expanded COVID-19 emergency rental assistance</div>
+      <canvas id="c-rental" height="220"></canvas>
+      <p class="fn-text">2025 figures are year-to-date. Totals reflect all rental assistance providers combined.</p>
+    </div>
+    <div class="card">
+      <div class="ct">What prevention services cover</div>
+      <div class="cn">The City funds four types of prevention and stability services</div>
+      <div style="margin-top:8px; display:flex; flex-direction:column; gap:12px;">
+        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #003087;">
+          <div style="font-size:13px; font-weight:700; color:#003087; margin-bottom:4px;">Rental assistance</div>
+          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Emergency financial help for households at risk of losing their housing — including dedicated assistance for West Hollywood residents 55 and older.</div>
+        </div>
+        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #5B9BD5;">
+          <div style="font-size:13px; font-weight:700; color:#1a7abf; margin-bottom:4px;">Eviction defense &amp; tenant rights</div>
+          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Free legal help to fight evictions, understand tenant rights, and access housing benefits — keeping people in their homes.</div>
+        </div>
+        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #8FBBDB;">
+          <div style="font-size:13px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Health &amp; recovery support</div>
+          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Benefits counseling, substance use recovery, and services for people living with HIV/AIDS — addressing the underlying factors that can lead to housing instability.</div>
+        </div>
+        <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #8FBBDB;">
+          <div style="font-size:13px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Outreach to at-risk communities</div>
+          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Targeted outreach and peer support for transgender, gender non-conforming, and intersex community members who face heightened risk of housing instability.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAKEAWAYS -->
+  <div style="margin-bottom:10px;"><div class="ct">Key takeaways</div></div>
+  <div class="tg">
+    <div class="tk">
+      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L10 7H15L11 10L12.5 15L8 12L3.5 15L5 10L1 7H6L8 2Z" fill="#fff"/></svg></div>
+      <div class="tt"><strong>A coordinated, multi-layered system</strong>West Hollywood's approach moves people from first contact through outreach, interim housing, and into permanent stability — with 411 individuals permanently housed since 2016.</div>
+    </div>
+    <div class="tk">
+      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><path d="M2 13L6 5L9 10L11 7L14 13H2Z" fill="#fff"/></svg></div>
+      <div class="tt"><strong>HCL is the front door</strong>993 requests routed in nine months, with 73% of teams arriving within 15 minutes. The line is growing — recent months averaging 6–7 requests per day as community awareness increases.</div>
+    </div>
+    <div class="tk">
+      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="2"/><path d="M5 8L7 10L11 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div class="tt"><strong>Housing capacity is expanding</strong>Interim housing admissions grew from 64 in 2021 to 151 in 2025. The Holloway program added 20 in-city beds in October 2025 and reached full occupancy within weeks.</div>
+    </div>
+    <div class="tk">
+      <div class="ti"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="10" width="2" height="4" fill="#fff"/><rect x="7" y="6" width="2" height="8" fill="#fff" opacity="0.7"/><rect x="12" y="2" width="2" height="12" fill="#fff" opacity="0.4"/></svg></div>
+      <div class="tt"><strong>Prevention keeps people housed</strong>Over $2.6 million in rental assistance has been disbursed since 2018. Eviction defense and tenant advocacy add an additional layer of stability for at-risk households.</div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /content -->
+
+<div class="content" style="padding-top:0;">
+  <div class="footer">
+    <span>West Hollywood Homeless Initiative &nbsp;·&nbsp; Human Services Division &nbsp;·&nbsp; City of West Hollywood</span>
+    <span>Sources: Agency outcome reports · HCL program records (Jul 2025–Mar 2026) · City budget documents</span>
+  </div>
+</div>
+
+<script>
+// ── CANVAS SETUP ──
+function setupCanvas(canvas) {
+  const p=canvas.parentElement, s=window.getComputedStyle(p);
+  const W=Math.max(p.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight),200);
+  const H=parseInt(canvas.getAttribute('height'))||220;
+  canvas.width=W; canvas.height=H;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  return {ctx:canvas.getContext('2d'),W,H};
+}
+
+const B1='#003087',B2='#5B9BD5',B3='#8FBBDB',B4='#B8D4EA';
+
+// ── DATA ──
+const D = {
+  // HCL daily rates (requests/day)
+  hclMonthly: { labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'], values:[2.0,2.2,2.7,2.2,3.6,4.4,6.2,7.6,6.4] },
+  hclReasons: [
+    {label:'Housing / resource / outreach', val:513, pct:'52%', color:B1},
+    {label:'Medical / health / mental health', val:168, pct:'17%', color:B1},
+    {label:'Welfare / wellness check',         val:149, pct:'15%', color:B2},
+    {label:'Administrative',                   val:66,  pct:'7%',  color:B3},
+    {label:'Disturbance / safety concern',     val:52,  pct:'5%',  color:B3},
+    {label:'Other',                            val:45,  pct:'5%',  color:B4},
+  ],
+  hclOutcomes: { labels:['Accepted services','Declined services','Unable to locate','Outcome pending / unknown'], values:[381,228,185,199], colors:[B1,B3,B2,B4] },
+  hclTime:  { labels:['6–9 AM','9 AM–12','12–3 PM','3–6 PM','6 PM+'], values:[214,256,282,208,19] },
+  hclDow:   { labels:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], values:[114,146,148,136,156,179,114] },
+  // Housing outcomes — totals only, no provider breakout
+  years: ['2021','2022','2023','2024','2025 YTD'],
+  permTotal:  [50, 49, 57, 72, 44],
+  intTotal:   [64, 85, 117, 134, 151],
+  // Rental assistance — combined totals
+  rentalTotal:   [442, 139, 132, 83, 108],
+};
+
+// ── NAVIGATION ──
+let currentPage='overview';
+function showPage(id,el){
+  currentPage=id;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false');});
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active'); el.setAttribute('aria-selected','true');
+  destroyAll(); renderPage(id);
+}
+
+// ── CHART ENGINE ──
+function rr(ctx,x,y,w,h,r){
+  if(h<1){ctx.rect(x,y+h,w,Math.max(1,Math.abs(h)));return;}
+  r=Math.min(r,h/2,w/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+
+function drawBar(id,labels,values,colors,opts={}){
+  const canvas=document.getElementById(id); if(!canvas)return;
+  const {ctx,W,H}=setupCanvas(canvas);
+  const pad={top:10,right:12,bottom:opts.rotateLabels?44:24,left:opts.leftPad||40};
+  const cW=W-pad.left-pad.right,cH=H-pad.top-pad.bottom;
+  const max=opts.axisMax||Math.max(...values,1);
+  const n=labels.length,gW=cW/n,bW=Math.min(gW*0.62,46);
+  ctx.strokeStyle='#eef1f8';ctx.lineWidth=1;
+  const ticks=opts.isRate?[0,2,4,6,8]:[0,0.25,0.5,0.75,1].map(t=>Math.round(t*max));
+  ticks.forEach(tv=>{
+    const y=pad.top+cH-(tv/max)*cH;
+    ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cW,y);ctx.stroke();
+    ctx.fillStyle='#9aa5be';ctx.font='10px Arial';ctx.textAlign='right';
+    ctx.fillText(opts.isRate?tv:Math.round(tv),pad.left-4,y+3);
+  });
+  values.forEach((v,i)=>{
+    const bh=(v/max)*cH,x=pad.left+i*gW+(gW-bW)/2,y=pad.top+cH-bh;
+    ctx.fillStyle=Array.isArray(colors)?(colors[i]||B1):colors;
+    rr(ctx,x,y,bW,bh,3);ctx.fill();
+    if(bh>16){ctx.fillStyle='#fff';ctx.font='bold 10px Arial';ctx.textAlign='center';
+      ctx.fillText(opts.isRate?v.toFixed(1):v,x+bW/2,y+13);}
+  });
+  ctx.fillStyle='#6b7a99';ctx.font='10px Arial';ctx.textAlign='center';
+  labels.forEach((lbl,i)=>{
+    const x=pad.left+i*gW+gW/2;
+    if(opts.rotateLabels){ctx.save();ctx.translate(x,pad.top+cH+6);ctx.rotate(-Math.PI/5);ctx.textAlign='right';ctx.fillText(lbl,0,0);ctx.restore();}
+    else ctx.fillText(lbl,x,pad.top+cH+14);
+  });
+  if(opts.isRate){ctx.save();ctx.translate(10,pad.top+cH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#9aa5be';ctx.font='10px Arial';ctx.fillText('req/day',0,0);ctx.restore();}
+}
+
+
+function drawDonut(id,labels,values,colors){
+  const canvas=document.getElementById(id); if(!canvas)return;
+  const {ctx,W,H}=setupCanvas(canvas);
+  const total=values.reduce((a,b)=>a+b,0);
+  const legH=Math.ceil(labels.length/2)*17+12;
+  const cH=H-legH,cx=W/2,cy=cH/2;
+  const r=Math.min(W,cH)/2-14,ir=r*0.58;
+  let angle=-Math.PI/2;
+  values.forEach((v,i)=>{
+    const slice=(v/total)*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.closePath();ctx.fillStyle=colors[i];ctx.fill();
+    ctx.beginPath();ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    angle+=slice;
+  });
+  ctx.beginPath();ctx.arc(cx,cy,ir,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  ctx.fillStyle=B1;ctx.font='bold 18px Arial';ctx.textAlign='center';ctx.fillText('993',cx,cy-2);
+  ctx.fillStyle='#9aa5be';ctx.font='10px Arial';ctx.fillText('requests',cx,cy+13);
+  labels.forEach((lbl,i)=>{
+    const col=i%2,row=Math.floor(i/2);
+    const lx=col===0?(W/2-130):(W/2+8),ly=cH+10+row*17;
+    const pct=Math.round(values[i]/total*100);
+    ctx.fillStyle=colors[i];ctx.fillRect(lx,ly-9,10,10);
+    ctx.fillStyle='#4a5568';ctx.font='10px Arial';ctx.textAlign='left';
+    ctx.fillText(`${lbl}  ${pct}%`,lx+13,ly);
+  });
+}
+
+function buildBars(id,items){
+  const el=document.getElementById(id); if(!el)return;
+  const maxV=Math.max(...items.map(i=>i.val));
+  el.innerHTML=items.map(item=>{
+    const w=Math.round((item.val/maxV)*88);
+    return `<div class="br"><span class="bl">${item.label}</span><div class="bt"><div class="bf" style="width:${w}%;background:${item.color||B1};">${item.pct||item.val}</div></div></div>`;
+  }).join('');
+}
+
+// ── DESTROY ──
+const charts=['c-monthly','c-outcomes','c-time','c-dow','c-perm','c-interim','c-rental'];
+function destroyAll(){
+  charts.forEach(id=>{
+    const c=document.getElementById(id);
+    if(c){c.getContext('2d').clearRect(0,0,c.width,c.height);c.removeAttribute('style');}
+  });
+}
+
+// ── RENDER ──
+function renderPage(id){
+  if(id==='hcl'){
+    const mMax=Math.max(...D.hclMonthly.values);
+    drawBar('c-monthly',D.hclMonthly.labels,D.hclMonthly.values,
+      D.hclMonthly.values.map(v=>v===mMax?B1:v>=5?B2:B3),{axisMax:9,isRate:true});
+    buildBars('bars-reasons',D.hclReasons);
+    drawDonut('c-outcomes',D.hclOutcomes.labels,D.hclOutcomes.values,D.hclOutcomes.colors);
+    const tMax=Math.max(...D.hclTime.values);
+    drawBar('c-time',D.hclTime.labels,D.hclTime.values,D.hclTime.values.map(v=>v===tMax?B1:v>150?B2:B3),{axisMax:320});
+    const dMax=Math.max(...D.hclDow.values);
+    drawBar('c-dow',D.hclDow.labels,D.hclDow.values,D.hclDow.values.map(v=>v===dMax?B1:v>140?B2:B3),{axisMax:220});
+  }
+  if(id==='housing'){
+    drawBar('c-perm', D.years, D.permTotal,
+      D.permTotal.map(v=>v===Math.max(...D.permTotal)?B1:B2), {axisMax:80});
+    drawBar('c-interim', D.years, D.intTotal,
+      D.intTotal.map(v=>v===Math.max(...D.intTotal)?B1:B2), {axisMax:180});
+  }
+  if(id==='prevention'){
+    drawBar('c-rental', D.years, D.rentalTotal,
+      D.rentalTotal.map(v=>v===Math.max(...D.rentalTotal)?B1:v>100?B2:B3), {axisMax:500});
+  }
+}
+
+// ── INIT ──
+function init(){
+  let t;
+  window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{destroyAll();renderPage(currentPage);},150);});
+}
+if(document.readyState==='complete') requestAnimationFrame(()=>requestAnimationFrame(init));
+else window.addEventListener('load',()=>requestAnimationFrame(()=>requestAnimationFrame(init)));
+</script>
+</body>
+</html>

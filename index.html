@@ -6,21 +6,21 @@
 <title>West Hollywood Homeless Initiative — Dashboard</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 14px; }
+body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 16px; }
 
 /* HEADER */
 .header { background: #003087; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.header-title { color: #fff; font-size: 19px; font-weight: 700; }
-.header-sub { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; }
+.header-title { color: #fff; font-size: 21px; font-weight: 700; }
+.header-sub { color: rgba(255,255,255,0.72); font-size: 13px; margin-top: 2px; }
 .header-right { text-align: right; flex-shrink: 0; }
-.header-label { color: rgba(255,255,255,0.6); font-size: 11px; }
-.header-val { color: #fff; font-size: 12px; font-weight: 700; margin-top: 2px; }
+.header-label { color: rgba(255,255,255,0.6); font-size: 13px; }
+.header-val { color: #fff; font-size: 14px; font-weight: 700; margin-top: 2px; }
 .header-logo { height: 78px; width: auto; border-radius: 6px; display: block; flex-shrink: 0; }
 .header-divider { width: 1px; height: 44px; background: rgba(255,255,255,0.25); flex-shrink: 0; }
 
 /* PAGE NAV */
 .page-nav { background: #fff; border-bottom: 1px solid #dce3ef; padding: 0 28px; display: flex; }
-.page-tab { padding: 12px 20px; font-size: 13px; font-weight: 700; color: #6b7a99; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+.page-tab { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #6b7a99; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
 .page-tab:hover { color: #003087; background: #f8faff; }
 .page-tab.active { color: #003087; border-bottom-color: #003087; }
 .page-tab:focus-visible { outline: 3px solid #003087; outline-offset: -2px; }
@@ -31,7 +31,7 @@ body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1
 .page.active { display: block; }
 
 /* CONTEXT BANNER */
-.ctx { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 12px 18px; margin-bottom: 18px; font-size: 13px; color: #2d3748; line-height: 1.7; }
+.ctx { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 12px 18px; margin-bottom: 18px; font-size: 14px; color: #2d3748; line-height: 1.7; }
 
 /* KPI CARDS */
 .kpi-row { display: grid; gap: 12px; margin-bottom: 18px; }
@@ -41,36 +41,36 @@ body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1
 .kpi { background: #fff; border-radius: 8px; padding: 16px 18px; border-top: 3px solid #003087; box-shadow: 0 1px 4px rgba(0,0,135,0.06); }
 .kpi.accent2 { border-top-color: #1a7abf; }
 .kpi.accent3 { border-top-color: #5B9BD5; }
-.kpi-label { font-size: 10px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
-.kpi-value { font-size: 28px; font-weight: 700; color: #003087; line-height: 1; }
-.kpi-value.sm { font-size: 22px; }
-.kpi-sub { font-size: 12px; color: #5a6a88; margin-top: 5px; }
+.kpi-label { font-size: 12px; color: #6b7a99; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+.kpi-value { font-size: 32px; font-weight: 700; color: #003087; line-height: 1; }
+.kpi-value.sm { font-size: 26px; }
+.kpi-sub { font-size: 13px; color: #5a6a88; margin-top: 5px; }
 
 /* CHART GRID */
 .cgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 18px; }
 .card { background: #fff; border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,135,0.06); overflow: hidden; }
 .card.full { grid-column: span 2; }
-.ct { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; }
-.cn { font-size: 12px; color: #5a6a88; margin-bottom: 12px; }
-.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 11px; color: #6b7a99; align-items: center; }
+.ct { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+.cn { font-size: 13px; color: #5a6a88; margin-bottom: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 13px; color: #6b7a99; align-items: center; }
 .ls { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
 canvas { display: block; max-width: 100%; }
 
 /* BAR ROWS */
 .br { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-.bl { font-size: 12px; color: #2d3748; width: 172px; flex-shrink: 0; text-align: right; line-height: 1.3; }
+.bl { font-size: 13px; color: #2d3748; width: 190px; flex-shrink: 0; text-align: right; line-height: 1.3; }
 .bt { flex: 1; background: #eef1f8; border-radius: 4px; height: 22px; overflow: hidden; }
-.bf { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; color: #fff; font-weight: 700; min-width: 32px; }
+.bf { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 13px; color: #fff; font-weight: 700; min-width: 36px; }
 
 /* STAT TABLE */
-.st { width: 100%; border-collapse: collapse; font-size: 12px; }
-.st td { padding: 9px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; line-height: 1.5; font-size:13px; }
+.st { width: 100%; border-collapse: collapse; font-size: 14px; }
+.st td { padding: 9px 8px; border-bottom: 1px solid #eef1f8; color: #1a1a2e; line-height: 1.5; font-size:14px; }
 .st td:first-child { color: #2d3748; }
 .st td:last-child { text-align: right; font-weight: 700; color: #003087; white-space: nowrap; }
 .st tr:last-child td { border-bottom: none; }
-.st .grp td { background: #f8faff; font-weight: 700; font-size: 11px; color: #003087; padding-top: 10px; border-bottom: none; }
-.st .sub td:first-child { color: #9aa5be; padding-left: 18px; font-size: 11px; }
-.st .sub td:last-child { color: #6b7a99; font-size: 11px; }
+.st .grp td { background: #f8faff; font-weight: 700; font-size: 13px; color: #003087; padding-top: 10px; border-bottom: none; }
+.st .sub td:first-child { color: #9aa5be; padding-left: 18px; font-size: 13px; }
+.st .sub td:last-child { color: #6b7a99; font-size: 13px; }
 
 
 /* FLOW */
@@ -79,35 +79,35 @@ canvas { display: block; max-width: 100%; }
 .fs + .fs { margin-left: 26px; }
 .fs::before { content:''; position:absolute; left:-18px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:9px solid transparent; border-bottom:9px solid transparent; border-left:11px solid #003087; }
 .fs:first-child::before { display:none; }
-.fn { width:24px; height:24px; background:#003087; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; margin-bottom:7px; }
-.ft { font-size:12px; font-weight:700; color:#003087; margin-bottom:3px; }
-.fd { font-size:12px; color:#4a5568; line-height:1.5; }
+.fn { width:24px; height:24px; background:#003087; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin-bottom:7px; }
+.ft { font-size:14px; font-weight:700; color:#003087; margin-bottom:3px; }
+.fd { font-size:13px; color:#4a5568; line-height:1.5; }
 
 /* RESPONDERS */
 .rg { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
 .rc { background:#fff; border-radius:8px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,135,0.06); border-left:5px solid #003087; }
 .rc.s { border-left-color:#5B9BD5; }
-.rn { font-size:13px; font-weight:700; color:#003087; margin-bottom:4px; }
+.rn { font-size:15px; font-weight:700; color:#003087; margin-bottom:4px; }
 .rc.s .rn { color:#1a7abf; }
-.rh { font-size:11px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
-.rf { font-size:12px; color:#4a5568; line-height:1.5; }
-.rb { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; margin-bottom:7px; background:#003087; color:#fff; }
+.rh { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
+.rf { font-size:13px; color:#4a5568; line-height:1.5; }
+.rb { display:inline-block; font-size:12px; font-weight:700; padding:3px 10px; border-radius:10px; margin-bottom:7px; background:#003087; color:#fff; }
 .rc.s .rb { background:#eef1f8; color:#6b7a99; }
 
 /* TAKEAWAY */
 .tg { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:18px; }
 .tk { background:#fff; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,135,0.06); display:flex; gap:12px; align-items:flex-start; }
 .ti { width:32px; height:32px; border-radius:50%; background:#003087; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.tt { font-size:13px; color:#2d3748; line-height:1.6; }
-.tt strong { color:#003087; display:block; margin-bottom:3px; font-size:13px; }
+.tt { font-size:14px; color:#2d3748; line-height:1.6; }
+.tt strong { color:#003087; display:block; margin-bottom:3px; font-size:14px; }
 
 /* HOLLOWAY */
 
 /* FOOTNOTE */
-.fn-text { font-size:11px; color:#5a6a88; font-style:italic; margin-top:8px; line-height:1.5; }
+.fn-text { font-size:12px; color:#5a6a88; font-style:italic; margin-top:8px; line-height:1.5; }
 
 /* FOOTER */
-.footer { margin-top:12px; padding:14px 0 4px; border-top:1px solid #dce3ef; display:flex; justify-content:space-between; font-size:11px; color:#5a6a88; }
+.footer { margin-top:12px; padding:14px 0 4px; border-top:1px solid #dce3ef; display:flex; justify-content:space-between; font-size:12px; color:#5a6a88; }
 
 @media(max-width:900px){
   .k4,.k3{grid-template-columns:repeat(2,1fr);}
@@ -122,20 +122,24 @@ canvas { display: block; max-width: 100%; }
 /* SERVICE CATEGORIES */
 .svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
 .svc-card { background:#fff; border-radius:8px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,135,0.06); }
-.svc-icon { font-size:22px; margin-bottom:8px; }
-.svc-title { font-size:13px; font-weight:700; color:#003087; margin-bottom:5px; }
-.svc-desc { font-size:12px; color:#4a5568; line-height:1.5; }
+.svc-icon { font-size:24px; margin-bottom:8px; }
+.svc-title { font-size:15px; font-weight:700; color:#003087; margin-bottom:5px; }
+.svc-desc { font-size:13px; color:#4a5568; line-height:1.5; }
 
 /* CRF BANNER */
 .crf-banner { background:#fff; border-radius:8px; padding:18px 20px; box-shadow:0 1px 4px rgba(0,0,135,0.06); border-left:5px solid #003087; margin-bottom:18px; }
-.crf-label { display:inline-block; font-size:10px; font-weight:700; background:#003087; color:#fff; padding:2px 8px; border-radius:10px; margin-bottom:8px; letter-spacing:0.4px; }
-.crf-title { font-size:15px; font-weight:700; color:#003087; margin-bottom:6px; }
-.crf-body { font-size:13px; color:#2d3748; line-height:1.7; }
+.crf-label { display:inline-block; font-size:12px; font-weight:700; background:#003087; color:#fff; padding:2px 8px; border-radius:10px; margin-bottom:8px; letter-spacing:0.4px; }
+.crf-title { font-size:17px; font-weight:700; color:#003087; margin-bottom:6px; }
+.crf-body { font-size:14px; color:#2d3748; line-height:1.7; }
 .crf-body strong { color:#003087; }
 
 @media(max-width:900px){
   .svc-grid { grid-template-columns:1fr 1fr; }
 }
+
+/* ── TOOLTIP ── */
+.chart-tooltip { position:fixed; background:#1a1a2e; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:13px; padding:8px 12px; border-radius:6px; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:9999; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.chart-tooltip.visible { opacity:1; }
 </style>
 </head>
 <body>
@@ -196,27 +200,27 @@ canvas { display: block; max-width: 100%; }
   <!-- SYSTEM FLOW -->
   <div class="card full" style="margin-bottom:18px;">
     <div class="ct">How the system works</div>
-    <div class="cn">A coordinated path — from first contact to a permanent home</div>
+    <div class="cn">Proactive outreach and a coordinated path — from first contact to a permanent home</div>
     <div class="flow" style="margin-top:12px;">
       <div class="fs">
         <div class="fn">1</div>
-        <div class="ft">Someone reaches out</div>
-        <div class="fd">A community member, City staff, or Safety Ambassador contacts the Homeless Concern Line (323-848-6590) to report a concern or request help.</div>
+        <div class="ft">Outreach teams go out</div>
+        <div class="fd">Trained outreach teams actively search for people experiencing homelessness throughout West Hollywood — building trust, offering services, and meeting people where they are. Community members can also call the Homeless Concern Line (323-848-6590) to request help.</div>
       </div>
       <div class="fs">
         <div class="fn">2</div>
-        <div class="ft">A team responds</div>
-        <div class="fd">A trained outreach team is dispatched — day or night — to engage the individual, assess their needs, and connect them with services.</div>
+        <div class="ft">Needs are assessed</div>
+        <div class="fd">Teams engage with individuals, assess their health, housing, and service needs, and connect them with the right support — from medical care and meals to case management and benefits.</div>
       </div>
       <div class="fs">
         <div class="fn">3</div>
         <div class="ft">Shelter when ready</div>
-        <div class="fd">When someone is ready for housing, they can enter interim shelter — including the Holloway Interim Housing Program, West Hollywood's first in-city facility.</div>
+        <div class="fd">When someone is ready for housing, they can enter an interim housing placement. The <strong>Holloway Interim Housing Program</strong> serves West Hollywood residents experiencing chronic homelessness. Other interim and emergency shelter options are available for individuals who do not meet that criteria.</div>
       </div>
       <div class="fs">
         <div class="fn">4</div>
         <div class="ft">A permanent home</div>
-        <div class="fd">Case managers work with each person to secure permanent housing, apply for benefits, and access the support they need to stay housed long-term.</div>
+        <div class="fd">Case managers work with each person to secure permanent housing, apply for benefits, and access the ongoing support they need to stay housed long-term.</div>
       </div>
     </div>
   </div>
@@ -235,7 +239,7 @@ canvas { display: block; max-width: 100%; }
     <div class="svc-card">
       <div class="svc-icon">&#127968;</div>
       <div class="svc-title">Interim &amp; emergency shelter</div>
-      <div class="svc-desc">Short-term housing for individuals while they work toward a permanent home — including the new Holloway facility and youth shelter services.</div>
+      <div class="svc-desc">Short-term housing placements for individuals working toward a permanent home. The Holloway Interim Housing Program serves West Hollywood residents experiencing chronic homelessness. Additional interim and emergency shelter options are available for those who do not meet that criteria, including transitional housing for youth.</div>
     </div>
     <div class="svc-card">
       <div class="svc-icon">&#128274;</div>
@@ -261,10 +265,10 @@ canvas { display: block; max-width: 100%; }
 
   <!-- CRF BANNER -->
   <div class="crf-banner">
-    <div class="crf-label">What&#39;s next</div>
+    <div class="crf-label">What's next</div>
     <div class="crf-title">Building on success: the Coordinated Response Framework</div>
     <div class="crf-body">
-      West Hollywood's Homeless Initiative has delivered real results — 411 people permanently housed, a new in-city shelter, and a 24/7 concern line fielding nearly 1,000 calls in its first nine months. The City is now developing a <strong>Coordinated Response Framework (CRF)</strong> to strengthen how these services connect. The CRF will improve coordination across outreach teams, shelter providers, and housing programs — ensuring that people move more smoothly through the system and that the City's investment delivers the greatest possible impact.
+      West Hollywood's Homeless Initiative has delivered real results — 411 people permanently housed, the <strong>Holloway Interim Housing Program</strong> — West Hollywood's first in-city interim housing facility, serving residents experiencing chronic homelessness — and the Homeless Concern Line now operating 24/7 with expanded coverage managed by the Care Team. The City is now developing a <strong>Coordinated Response Framework (CRF)</strong> to build on this progress. The CRF will strengthen coordination across outreach teams, interim housing providers, and housing programs — ensuring people move more smoothly through the system and that the City's investment delivers the greatest possible impact.
     </div>
   </div>
 
@@ -367,7 +371,7 @@ canvas { display: block; max-width: 100%; }
 <div class="page" id="page-housing">
 
   <div class="ctx">
-    West Hollywood's housing programs have made steady progress in connecting people with permanent homes. 2024 was a record year — 72 individuals were permanently housed, the highest annual total since 2017. The Holloway Interim Housing Program, the City's first in-city shelter, opened in October 2025 and was fully occupied within weeks of launch.
+    West Hollywood's housing programs have made steady progress in connecting people with permanent homes. 2024 was a record year — 72 individuals were permanently housed, the highest annual total since 2017. The Holloway Interim Housing Program — the City's first in-city interim housing facility — opened in October 2025 and was fully occupied within weeks. Holloway serves West Hollywood residents experiencing chronic homelessness. Other interim and emergency shelter options serve individuals who do not meet that criteria.
   </div>
 
   <div class="kpi-row k3">
@@ -384,7 +388,7 @@ canvas { display: block; max-width: 100%; }
     <div class="kpi accent3">
       <div class="kpi-label">Combined shelter bed nights</div>
       <div class="kpi-value">56,156</div>
-      <div class="kpi-sub">Across all shelter providers</div>
+      <div class="kpi-sub">Across all interim housing providers</div>
     </div>
   </div>
 
@@ -397,7 +401,7 @@ canvas { display: block; max-width: 100%; }
     </div>
     <div class="card">
       <div class="ct">Interim housing admissions — by year</div>
-      <div class="cn">Admissions have grown steadily as shelter capacity expanded</div>
+      <div class="cn">Admissions have grown steadily as interim housing capacity expanded</div>
       <canvas id="c-interim" height="220"></canvas>
       <p class="fn-text">2025 figures are year-to-date. The Holloway program (20 beds) opened October 2025 and is not reflected in this chart.</p>
     </div>
@@ -406,7 +410,7 @@ canvas { display: block; max-width: 100%; }
   <!-- HOLLOWAY -->
   <div style="margin-bottom:10px;">
     <div class="ct">Holloway Interim Housing Program — Q1 Status (Oct–Dec 2025)</div>
-    <div class="cn">West Hollywood's first in-city shelter · 20 beds · Opened October 2025</div>
+    <div class="cn">West Hollywood's first in-city interim housing facility · Serves chronically homeless WeHo residents · 20 beds · Opened October 2025</div>
   </div>
   <div class="kpi-row k4">
     <div class="kpi">
@@ -470,20 +474,20 @@ canvas { display: block; max-width: 100%; }
       <div class="cn">The City funds four types of prevention and stability services</div>
       <div style="margin-top:8px; display:flex; flex-direction:column; gap:12px;">
         <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #003087;">
-          <div style="font-size:13px; font-weight:700; color:#003087; margin-bottom:4px;">Rental assistance</div>
-          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Emergency financial help for households at risk of losing their housing — including dedicated assistance for West Hollywood residents 55 and older.</div>
+          <div style="font-size:15px; font-weight:700; color:#003087; margin-bottom:4px;">Rental assistance</div>
+          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Emergency financial help for households at risk of losing their housing — including dedicated assistance for West Hollywood residents 55 and older.</div>
         </div>
         <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #5B9BD5;">
-          <div style="font-size:13px; font-weight:700; color:#1a7abf; margin-bottom:4px;">Eviction defense &amp; tenant rights</div>
-          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Free legal help to fight evictions, understand tenant rights, and access housing benefits — keeping people in their homes.</div>
+          <div style="font-size:15px; font-weight:700; color:#1a7abf; margin-bottom:4px;">Eviction defense &amp; tenant rights</div>
+          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Free legal help to fight evictions, understand tenant rights, and access housing benefits — keeping people in their homes.</div>
         </div>
         <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #8FBBDB;">
-          <div style="font-size:13px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Health &amp; recovery support</div>
-          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Benefits counseling, substance use recovery, and services for people living with HIV/AIDS — addressing the underlying factors that can lead to housing instability.</div>
+          <div style="font-size:15px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Health &amp; recovery support</div>
+          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Benefits counseling, substance use recovery, and services for people living with HIV/AIDS — addressing the underlying factors that can lead to housing instability.</div>
         </div>
         <div style="background:#f8faff; border-radius:8px; padding:14px 16px; border-left:4px solid #8FBBDB;">
-          <div style="font-size:13px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Outreach to at-risk communities</div>
-          <div style="font-size:12px; color:#4a5568; line-height:1.5;">Targeted outreach and peer support for transgender, gender non-conforming, and intersex community members who face heightened risk of housing instability.</div>
+          <div style="font-size:15px; font-weight:700; color:#4a7a9b; margin-bottom:4px;">Outreach to at-risk communities</div>
+          <div style="font-size:13px; color:#4a5568; line-height:1.5;">Targeted outreach and peer support for transgender, gender non-conforming, and intersex community members who face heightened risk of housing instability.</div>
         </div>
       </div>
     </div>
@@ -502,7 +506,7 @@ canvas { display: block; max-width: 100%; }
     </div>
     <div class="tk">
       <div class="ti"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="2"/><path d="M5 8L7 10L11 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <div class="tt"><strong>Housing capacity is expanding</strong>Interim housing admissions grew from 64 in 2021 to 151 in 2025. The Holloway program added 20 in-city beds in October 2025 and reached full occupancy within weeks.</div>
+      <div class="tt"><strong>Housing capacity is expanding</strong>Interim housing admissions grew from 64 in 2021 to 151 in 2025. The Holloway program added 20 in-city beds in October 2025 for West Hollywood residents experiencing chronic homelessness, reaching full occupancy within weeks.</div>
     </div>
     <div class="tk">
       <div class="ti"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="10" width="2" height="4" fill="#fff"/><rect x="7" y="6" width="2" height="8" fill="#fff" opacity="0.7"/><rect x="12" y="2" width="2" height="12" fill="#fff" opacity="0.4"/></svg></div>
@@ -514,10 +518,7 @@ canvas { display: block; max-width: 100%; }
 </div><!-- /content -->
 
 <div class="content" style="padding-top:0;">
-  <div class="footer">
-    <span>West Hollywood Homeless Initiative &nbsp;·&nbsp; Human Services Division &nbsp;·&nbsp; City of West Hollywood</span>
-    <span>Sources: Agency outcome reports · HCL program records (Jul 2025–Mar 2026) · City budget documents</span>
-  </div>
+
 </div>
 
 <script>
@@ -580,7 +581,7 @@ function rr(ctx,x,y,w,h,r){
 function drawBar(id,labels,values,colors,opts={}){
   const canvas=document.getElementById(id); if(!canvas)return;
   const {ctx,W,H}=setupCanvas(canvas);
-  const pad={top:10,right:12,bottom:opts.rotateLabels?44:24,left:opts.leftPad||40};
+  const pad={top:14,right:12,bottom:opts.rotateLabels?48:26,left:opts.leftPad||48};
   const cW=W-pad.left-pad.right,cH=H-pad.top-pad.bottom;
   const max=opts.axisMax||Math.max(...values,1);
   const n=labels.length,gW=cW/n,bW=Math.min(gW*0.62,46);
@@ -589,23 +590,27 @@ function drawBar(id,labels,values,colors,opts={}){
   ticks.forEach(tv=>{
     const y=pad.top+cH-(tv/max)*cH;
     ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cW,y);ctx.stroke();
-    ctx.fillStyle='#9aa5be';ctx.font='10px Arial';ctx.textAlign='right';
+    ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.textAlign='right';
     ctx.fillText(opts.isRate?tv:Math.round(tv),pad.left-4,y+3);
   });
   values.forEach((v,i)=>{
     const bh=(v/max)*cH,x=pad.left+i*gW+(gW-bW)/2,y=pad.top+cH-bh;
     ctx.fillStyle=Array.isArray(colors)?(colors[i]||B1):colors;
     rr(ctx,x,y,bW,bh,3);ctx.fill();
-    if(bh>16){ctx.fillStyle='#fff';ctx.font='bold 10px Arial';ctx.textAlign='center';
+    if(bh>16){ctx.fillStyle='#fff';ctx.font='bold 12px Arial';ctx.textAlign='center';
       ctx.fillText(opts.isRate?v.toFixed(1):v,x+bW/2,y+13);}
   });
-  ctx.fillStyle='#6b7a99';ctx.font='10px Arial';ctx.textAlign='center';
+  // Tooltip hit areas
+  const _ha=values.map((v,i)=>({x:pad.left+i*gW+(gW-bW)/2,y:pad.top+cH-(v/max)*cH,w:bW,h:(v/max)*cH,label:labels[i].replace('\n',' '),value:v}));
+  attachBarTooltips(id,_ha);
+
+  ctx.fillStyle='#6b7a99';ctx.font='12px Arial';ctx.textAlign='center';
   labels.forEach((lbl,i)=>{
     const x=pad.left+i*gW+gW/2;
     if(opts.rotateLabels){ctx.save();ctx.translate(x,pad.top+cH+6);ctx.rotate(-Math.PI/5);ctx.textAlign='right';ctx.fillText(lbl,0,0);ctx.restore();}
     else ctx.fillText(lbl,x,pad.top+cH+14);
   });
-  if(opts.isRate){ctx.save();ctx.translate(10,pad.top+cH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#9aa5be';ctx.font='10px Arial';ctx.fillText('req/day',0,0);ctx.restore();}
+  if(opts.isRate){ctx.save();ctx.translate(10,pad.top+cH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.fillText('req/day',0,0);ctx.restore();}
 }
 
 
@@ -626,14 +631,15 @@ function drawDonut(id,labels,values,colors){
     angle+=slice;
   });
   ctx.beginPath();ctx.arc(cx,cy,ir,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  canvas._donutGeom={cx,cy,r,ir};
   ctx.fillStyle=B1;ctx.font='bold 18px Arial';ctx.textAlign='center';ctx.fillText('993',cx,cy-2);
-  ctx.fillStyle='#9aa5be';ctx.font='10px Arial';ctx.fillText('requests',cx,cy+13);
+  ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.fillText('requests',cx,cy+13);
   labels.forEach((lbl,i)=>{
     const col=i%2,row=Math.floor(i/2);
     const lx=col===0?(W/2-130):(W/2+8),ly=cH+10+row*17;
     const pct=Math.round(values[i]/total*100);
     ctx.fillStyle=colors[i];ctx.fillRect(lx,ly-9,10,10);
-    ctx.fillStyle='#4a5568';ctx.font='10px Arial';ctx.textAlign='left';
+    ctx.fillStyle='#4a5568';ctx.font='12px Arial';ctx.textAlign='left';
     ctx.fillText(`${lbl}  ${pct}%`,lx+13,ly);
   });
 }
@@ -663,7 +669,9 @@ function renderPage(id){
     drawBar('c-monthly',D.hclMonthly.labels,D.hclMonthly.values,
       D.hclMonthly.values.map(v=>v===mMax?B1:v>=5?B2:B3),{axisMax:9,isRate:true});
     buildBars('bars-reasons',D.hclReasons);
+    attachBarRowTooltips('bars-reasons');
     drawDonut('c-outcomes',D.hclOutcomes.labels,D.hclOutcomes.values,D.hclOutcomes.colors);
+    attachDonutTooltips('c-outcomes',D.hclOutcomes.labels,D.hclOutcomes.values);
     const tMax=Math.max(...D.hclTime.values);
     drawBar('c-time',D.hclTime.labels,D.hclTime.values,D.hclTime.values.map(v=>v===tMax?B1:v>150?B2:B3),{axisMax:320});
     const dMax=Math.max(...D.hclDow.values);
@@ -688,6 +696,91 @@ function init(){
 }
 if(document.readyState==='complete') requestAnimationFrame(()=>requestAnimationFrame(init));
 else window.addEventListener('load',()=>requestAnimationFrame(()=>requestAnimationFrame(init)));
+
+// ══════════════════════════════════════════════
+// TOOLTIP SYSTEM
+// ══════════════════════════════════════════════
+const tooltip = document.getElementById('chart-tooltip');
+
+function showTooltip(x, y, content) {
+  if (!tooltip) return;
+  tooltip.innerHTML = content;
+  tooltip.classList.add('visible');
+  const tw = tooltip.offsetWidth || 160;
+  const th = tooltip.offsetHeight || 36;
+  let tx = x + 14, ty = y - th / 2;
+  if (tx + tw > window.innerWidth - 8) tx = x - tw - 14;
+  if (ty < 8) ty = 8;
+  if (ty + th > window.innerHeight - 8) ty = window.innerHeight - th - 8;
+  tooltip.style.left = tx + 'px';
+  tooltip.style.top  = ty + 'px';
+}
+function hideTooltip() { if (tooltip) tooltip.classList.remove('visible'); }
+
+function _setCanvasTooltip(id, onMove, onLeave) {
+  const c = document.getElementById(id); if (!c) return;
+  if (c._ttMove)  c.removeEventListener('mousemove',  c._ttMove);
+  if (c._ttLeave) c.removeEventListener('mouseleave', c._ttLeave);
+  c._ttMove = onMove; c._ttLeave = onLeave;
+  c.addEventListener('mousemove', onMove);
+  c.addEventListener('mouseleave', onLeave);
+}
+
+function attachBarTooltips(id, hitAreas) {
+  _setCanvasTooltip(id, function(e) {
+    const c = document.getElementById(id); if (!c) return;
+    const rect = c.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    for (const a of hitAreas) {
+      if (mx >= a.x && mx <= a.x+a.w && my >= a.y && my <= a.y+a.h) {
+        showTooltip(e.clientX, e.clientY, '<strong>'+a.label+'</strong><br>'+a.value.toLocaleString());
+        return;
+      }
+    }
+    hideTooltip();
+  }, hideTooltip);
+}
+
+function attachBarRowTooltips(containerId) {
+  const el = document.getElementById(containerId); if (!el) return;
+  el.querySelectorAll('.br').forEach(row => {
+    const lbl  = row.querySelector('.bl');
+    const fill = row.querySelector('.bf');
+    if (!lbl || !fill) return;
+    const labelText = lbl.textContent.trim();
+    const valText   = fill.textContent.trim();
+    row.onmouseenter = function(e) { showTooltip(e.clientX, e.clientY, '<strong>'+labelText+'</strong><br>'+valText); };
+    row.onmousemove  = function(e) { showTooltip(e.clientX, e.clientY, '<strong>'+labelText+'</strong><br>'+valText); };
+    row.onmouseleave = hideTooltip;
+  });
+}
+
+function attachDonutTooltips(id, labels, values) {
+  const total = values.reduce((a,b)=>a+b,0);
+  _setCanvasTooltip(id, function(e) {
+    const c = document.getElementById(id); if (!c) return;
+    const rect = c.getBoundingClientRect();
+    const geom = c._donutGeom; if (!geom) return;
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const dx = mx - geom.cx, dy = my - geom.cy;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < geom.ir || dist > geom.r) { hideTooltip(); return; }
+    let angle = Math.atan2(dy, dx) + Math.PI/2;
+    if (angle < 0) angle += Math.PI*2;
+    let cum = 0;
+    for (let i=0; i<values.length; i++) {
+      cum += (values[i]/total)*Math.PI*2;
+      if (angle <= cum) {
+        const pct = Math.round(values[i]/total*100);
+        showTooltip(e.clientX, e.clientY, '<strong>'+labels[i]+'</strong><br>'+values[i].toLocaleString()+' ('+pct+'%)');
+        return;
+      }
+    }
+    hideTooltip();
+  }, hideTooltip);
+}
+
 </script>
+<div class="chart-tooltip" id="chart-tooltip"></div>
 </body>
 </html>

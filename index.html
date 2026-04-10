@@ -115,6 +115,20 @@ canvas { display: block; max-width: 100%; }
   .fs{margin-left:0!important;}
   .fs::before{display:none;}
   .header{flex-direction:column;align-items:flex-start;gap:10px;}
+  .bl{width:140px;}
+}
+@media(max-width:520px){
+  .svc-grid{grid-template-columns:1fr;}
+  .k4,.k3{grid-template-columns:1fr;}
+  .kpi-value{font-size:26px;}
+  .kpi-value.sm{font-size:22px;}
+  .page-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;padding:0 12px;}
+  .page-tab{padding:10px 14px;font-size:13px;display:inline-block;}
+  .content{padding:12px;}
+  .bl{width:90px;font-size:11px;}
+  .bf{font-size:11px;}
+  .ctx{font-size:13px;}
+  .header-title{font-size:17px;}
 }
 
 /* SERVICE CATEGORIES */
@@ -776,6 +790,25 @@ function attachDonutTooltips(id, labels, values) {
     hideTooltip();
   }, hideTooltip);
 }
+
+
+// ── MOBILE CANVAS HEIGHT ADJUSTMENT ──
+function adjustCanvasHeightsHI() {
+  if (window.innerWidth <= 520) {
+    document.querySelectorAll('canvas').forEach(c => {
+      const orig = parseInt(c.getAttribute('data-orig-height') || c.height);
+      c.setAttribute('data-orig-height', orig);
+      c.height = Math.round(orig * 0.72);
+    });
+  } else {
+    document.querySelectorAll('canvas').forEach(c => {
+      const orig = c.getAttribute('data-orig-height');
+      if (orig) c.height = parseInt(orig);
+    });
+  }
+}
+window.addEventListener('resize', function() { adjustCanvasHeightsHI(); destroyAll(); renderPage(currentPage); });
+adjustCanvasHeightsHI();
 
 </script>
 <div class="chart-tooltip" id="chart-tooltip"></div>

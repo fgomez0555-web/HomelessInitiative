@@ -542,8 +542,8 @@ canvas { display: block; max-width: 100%; }
   </div>
   <div class="card" style="margin-bottom:18px;">
     <div class="ct">Long-term trend — annual average monthly count, 2017–2025</div>
-    <div class="cn">2025 reflects Jan–Sep only. Counts reflect locally observed unsheltered individuals.</div>
-    <canvas id="pit-trend" height="180"></canvas>
+    <div class="cn">Annual average of monthly counts.</div>
+    <canvas id="pit-trend" height="220"></canvas>
   </div>
   <div class="card" style="margin-bottom:18px; padding:0; overflow:hidden;">
     <div style="padding:16px 18px 10px;">
@@ -663,6 +663,64 @@ function drawBar(id,labels,values,colors,opts={}){
   if(opts.isRate){ctx.save();ctx.translate(10,pad.top+cH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.fillText('req/day',0,0);ctx.restore();}
 }
 
+
+
+function drawLine(id,labels,values,opts){
+  opts=opts||{};
+  const canvas=document.getElementById(id); if(!canvas)return;
+  const sc=setupCanvas(canvas);
+  const ctx=sc.ctx,W=sc.W,H=sc.H;
+  const pad={top:20,right:24,bottom:30,left:48};
+  const cW=W-pad.left-pad.right, cH=H-pad.top-pad.bottom;
+  const yMin=opts.yMin!==undefined?opts.yMin:0;
+  const yMax=opts.yMax||Math.max.apply(null,values)+5;
+  const range=yMax-yMin;
+  function toY(v){return pad.top+cH-((v-yMin)/range)*cH;}
+  function toX(i){return pad.left+(i/(labels.length-1))*cW;}
+
+  // Grid lines
+  var ticks=5;
+  ctx.strokeStyle="#eef1f8"; ctx.lineWidth=1;
+  for(var t=0;t<=ticks;t++){
+    var v=yMin+(range/ticks)*t;
+    var y=toY(v);
+    ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cW,y);ctx.stroke();
+    ctx.fillStyle="#9aa5be";ctx.font="11px Arial";ctx.textAlign="right";
+    ctx.fillText(Math.round(v),pad.left-5,y+4);
+  }
+
+  // Fill under line
+  ctx.beginPath();
+  ctx.moveTo(toX(0),toY(values[0]));
+  for(var i=1;i<values.length;i++){ctx.lineTo(toX(i),toY(values[i]));}
+  ctx.lineTo(toX(values.length-1),toY(yMin));
+  ctx.lineTo(toX(0),toY(yMin));
+  ctx.closePath();
+  ctx.fillStyle="rgba(0,48,135,0.07)";ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.moveTo(toX(0),toY(values[0]));
+  for(var i=1;i<values.length;i++){ctx.lineTo(toX(i),toY(values[i]));}
+  ctx.strokeStyle="#003087";ctx.lineWidth=2.5;ctx.stroke();
+
+  // Dots + labels
+  for(var i=0;i<values.length;i++){
+    var x=toX(i),y=toY(values[i]);
+    ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle="#003087";ctx.fill();
+    ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle="#1a1a2e";ctx.font="bold 11px Arial";ctx.textAlign="center";
+    ctx.fillText(values[i],x,y-9);
+  }
+
+  // X labels
+  for(var i=0;i<labels.length;i++){
+    ctx.fillStyle="#6b7a99";ctx.font="11px Arial";ctx.textAlign="center";
+    ctx.fillText(labels[i],toX(i),H-6);
+  }
+  chartInstances[id]=true;
+}
 
 function drawDonut(id,labels,values,colors){
   const canvas=document.getElementById(id); if(!canvas)return;
@@ -898,7 +956,7 @@ function pitRenderCharts(){
   const B1="#003087",B2="#5B9BD5";
   const v25=PIT_MONTHS9.map(m=>PIT_MO_2025[m]||0);
   drawBar("pit-bar-2025",PIT_MONTHS9,v25,v25.map(v=>v===Math.max(...v25)?B1:B2),{axisMax:80});
-  drawBar("pit-trend",PIT_YR_LBLS,PIT_YR_AVGS,PIT_YR_AVGS.map((v,i)=>i===PIT_YR_AVGS.length-1?B1:B2),{axisMax:80});
+  drawLine("pit-trend",PIT_YR_LBLS,PIT_YR_AVGS,{yMin:0,yMax:70});
 }
 function pitInit(){
   pitRenderCharts();

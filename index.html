@@ -152,7 +152,6 @@ canvas { display: block; max-width: 100%; }
 /* ── TOOLTIP ── */
 .chart-tooltip { position:fixed; background:#1a1a2e; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:13px; padding:8px 12px; border-radius:6px; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:9999; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
 .chart-tooltip.visible { opacity:1; }
-#pit-map .leaflet-control, #page-pit select, #page-pit label, #page-pit button, #page-pit .ct, #page-pit .cn { font-family: Arial, Helvetica, sans-serif !important; }
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -191,6 +190,28 @@ canvas { display: block; max-width: 100%; }
     Since 2018, West Hollywood has invested approximately <strong>$8 million per year</strong> — about 5% of the City's operating budget — in a coordinated system of services, which includes services to address and prevent homelessness. That system has helped <strong>411 people find permanent housing</strong>, placed <strong>781 individuals in interim shelter</strong>, and provided <strong>over 1,800 households</strong> with rental assistance to prevent homelessness. The initiative is now evolving with a new Coordinated Response Framework — building on what's working to serve the community even better.
   </div>
 
+  <div class="kpi-row k4">
+    <div class="kpi">
+      <div class="kpi-label">People permanently housed</div>
+      <div class="kpi-value">411</div>
+      <div class="kpi-sub">Since 2016</div>
+    </div>
+    <div class="kpi accent2">
+      <div class="kpi-label">Placed in interim shelter</div>
+      <div class="kpi-value">781</div>
+      <div class="kpi-sub">New admissions since 2017</div>
+    </div>
+    <div class="kpi accent3">
+      <div class="kpi-label">Rental assistance payments</div>
+      <div class="kpi-value">1,861</div>
+      <div class="kpi-sub">Households helped since 2017</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Concern Line calls answered</div>
+      <div class="kpi-value kpi-sm">993</div>
+      <div class="kpi-sub">Jul 2025 – Mar 2026</div>
+    </div>
+  </div>
 
   <!-- SYSTEM FLOW -->
   <div class="card full" style="margin-bottom:18px;">
@@ -527,17 +548,19 @@ canvas { display: block; max-width: 100%; }
   <div class="card" style="margin-bottom:18px; padding:0; overflow:hidden;">
     <div style="padding:16px 18px 10px;">
       <div class="ct">Where people were observed</div>
-      <div class="cn" style="margin-bottom:10px;">All geocoded count locations, Jan 2024 – Sep 2025. Dot size reflects count. Use filters to explore by year or month.</div>
+      <div class="cn" style="margin-bottom:10px;">All geocoded count locations. Dot size reflects count. Use filters to explore by year or month.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
         <div><label style="font-size:12px;font-weight:700;color:#6b7a99;margin-right:6px;">Year</label>
-          <select id="pit-year-sel" onchange="pitFilter()" style="font-size:13px;border:1px solid #dce3ef;border-radius:4px;padding:4px 8px;color:#2d3748;">
-            <option value="all">All (2024–2025)</option><option value="2024">2024</option><option value="2025">2025</option>
+          <select id="pit-year-sel" onchange="pitFilter()" style="font-size:13px;font-family:Arial,Helvetica,sans-serif;border:1px solid #dce3ef;border-radius:4px;padding:4px 8px;color:#2d3748;">
+            <option value="all">All (2024–2025)</option>
+            <option value="2024">2024</option>
+            <option value="2025" selected>2025</option>
           </select></div>
         <div><label style="font-size:12px;font-weight:700;color:#6b7a99;margin-right:6px;">Month</label>
-          <select id="pit-month-sel" onchange="pitFilter()" style="font-size:13px;border:1px solid #dce3ef;border-radius:4px;padding:4px 8px;color:#2d3748;">
+          <select id="pit-month-sel" onchange="pitFilter()" style="font-size:13px;font-family:Arial,Helvetica,sans-serif;border:1px solid #dce3ef;border-radius:4px;padding:4px 8px;color:#2d3748;">
             <option value="all">All months</option>
           </select></div>
-</div>
+      </div>
     </div>
     <div id="pit-map" style="height:460px;width:100%;"></div>
   </div>
@@ -836,20 +859,21 @@ const PIT_MO_2025={"Jan": 59, "Feb": 52, "Mar": 55, "Apr": 55, "May": 59, "Jun":
 const PIT_YR_AVGS=[30.4, 38.8, 49.5, 43.4, 39.4, 41.7, 47.1, 51.4, 55];
 const PIT_YR_LBLS=["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
 const PIT_MONTHS9=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
-let _pitMap=null,_pitHeat=null,_pitDots=null,_pitView="points";
+let _pitMap=null,_pitDots=null;
 
-function pitPopulateMonths(){
+function pitPopulateMonths(target){
   const yr=document.getElementById("pit-year-sel").value;
   const sel=document.getElementById("pit-month-sel");
-  const cur=sel.value;
+  const cur=target!==undefined?target:sel.value;
   sel.innerHTML='<option value="all">All months</option>';
   const data=yr==="all"?PIT_PTS:PIT_PTS.filter(p=>String(p[5])===yr);
   const seen=new Set();data.forEach(p=>seen.add(p[4]));
   [...seen].sort((a,b)=>new Date("01 "+a)-new Date("01 "+b)).forEach(m=>{
     const o=document.createElement("option");
-    o.value=m;o.textContent=m;if(m===cur)o.selected=true;
+    o.value=m;o.textContent=m;
     sel.appendChild(o);
   });
+  if(cur){sel.value=cur;}
 }
 function pitFilter(){pitPopulateMonths();pitRenderMap();}
 function pitRenderMap(){
@@ -859,18 +883,16 @@ function pitRenderMap(){
   if(yr!=="all")data=data.filter(p=>String(p[5])===yr);
   if(mo!=="all")data=data.filter(p=>p[4]===mo);
   if(_pitDots){_pitMap.removeLayer(_pitDots);_pitDots=null;}
-  {
-    _pitDots=L.layerGroup();
-    data.forEach(p=>{
-      const r=Math.max(5,Math.min(15,p[2]*2.5));
-      L.circleMarker([p[0],p[1]],{
-        radius:r,fillColor:"#003087",color:"#fff",weight:1.5,opacity:1,fillOpacity:0.75
-      }).bindTooltip("<strong>"+p[3]+"</strong><br>"+p[4]+": "+p[2]+" individual"+(p[2]!==1?"s":""),
-        {direction:"top",offset:[0,-4]})
-       .addTo(_pitDots);
-    });
-    _pitDots.addTo(_pitMap);
-  }
+  _pitDots=L.layerGroup();
+  data.forEach(p=>{
+    const r=Math.max(5,Math.min(15,p[2]*2.5));
+    L.circleMarker([p[0],p[1]],{
+      radius:r,fillColor:"#003087",color:"#fff",weight:1.5,opacity:1,fillOpacity:0.75
+    }).bindTooltip("<strong>"+p[3]+"</strong><br>"+p[4]+": "+p[2]+" individual"+(p[2]!==1?"s":""),
+      {direction:"top",offset:[0,-4]})
+     .addTo(_pitDots);
+  });
+  _pitDots.addTo(_pitMap);
 }
 function pitRenderCharts(){
   const B1="#003087",B2="#5B9BD5";
@@ -880,7 +902,8 @@ function pitRenderCharts(){
 }
 function pitInit(){
   pitRenderCharts();
-  pitPopulateMonths();
+  document.getElementById("pit-year-sel").value="2025";
+  pitPopulateMonths("Sep 2025");
   if(!_pitMap){
     _pitMap=L.map("pit-map").setView([34.0887,-118.3671],14);
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{

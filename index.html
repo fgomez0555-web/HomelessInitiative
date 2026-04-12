@@ -32,7 +32,7 @@ body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f9; color: #1
 .ctx { background: #f0f4ff; border-left: 4px solid #003087; border-radius: 0 6px 6px 0; padding: 12px 18px; margin-bottom: 18px; font-size: 14px; color: #2d3748; line-height: 1.7; }
 
 /* KPI CARDS */
-.kpi-row { display: grid; gap: 12px; margin-bottom: 18px; }
+.kpi-row { display: grid; gap: 12px; margin-bottom: 18px; align-items: start; }
 .k4 { grid-template-columns: repeat(4,1fr); }
 .k3 { grid-template-columns: repeat(3,1fr); }
 .k2 { grid-template-columns: repeat(2,1fr); }
@@ -109,6 +109,7 @@ canvas { display: block; max-width: 100%; }
 
 @media(max-width:900px){
   .k4,.k3{grid-template-columns:repeat(2,1fr);}
+  .kpi-expanded{grid-column:span 1;}
   .cgrid,.rg,.tg,.svc-grid{grid-template-columns:1fr;}
   .card.full{grid-column:span 1;}
   .flow{flex-direction:column;gap:10px;}
@@ -152,6 +153,14 @@ canvas { display: block; max-width: 100%; }
 /* ── TOOLTIP ── */
 .chart-tooltip { position:fixed; background:#1a1a2e; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:13px; padding:8px 12px; border-radius:6px; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:9999; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
 .chart-tooltip.visible { opacity:1; }
+
+.kpi-detail { max-height:0; overflow:hidden; opacity:0; transition:max-height 0.4s ease, opacity 0.3s ease, padding-top 0.3s ease; font-size:13px; color:#5a6a88; margin-top:8px; line-height:1.65; border-top:1px solid #dce3ef; padding-top:0; }
+.kpi-expanded { grid-column: span 2; box-shadow:0 6px 20px rgba(0,48,135,0.12); }
+.kpi-expanded .kpi-detail { opacity:1; padding-top:10px; }
+.kpi[data-expand]:hover { box-shadow:0 4px 16px rgba(0,48,135,0.12); transform:translateY(-1px); }
+.kpi[data-expand] { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.kpi-value { transition: none; }
+
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -191,24 +200,27 @@ canvas { display: block; max-width: 100%; }
   </div>
 
   <div class="kpi-row k4">
-    <div class="kpi">
+    <div class="kpi" data-expand="1">
       <div class="kpi-label">People permanently housed</div>
       <div class="kpi-value">411</div>
       <div class="kpi-sub">Since 2016</div>
+      <div class="kpi-detail">72 placed in 2024 — the highest annual total on record. Placements include permanent supportive housing, rental vouchers, and other long-term housing options.</div>
     </div>
-    <div class="kpi accent2">
+    <div class="kpi accent2" data-expand="1">
       <div class="kpi-label">Placed in interim shelter</div>
       <div class="kpi-value">781</div>
       <div class="kpi-sub">New admissions since 2017</div>
+      <div class="kpi-detail">Admissions grew from 64 in 2021 to 151 in 2025. The Holloway Interim Housing Program added 20 in-city beds in October 2025.</div>
     </div>
-    <div class="kpi accent3">
+    <div class="kpi accent3" data-expand="1">
       <div class="kpi-label">Rental assistance payments</div>
       <div class="kpi-value">1,861</div>
       <div class="kpi-sub">Households helped since 2017</div>
+      <div class="kpi-detail">More than $2.6 million disbursed since 2018. Includes emergency assistance, older adult programs, and COVID-era relief.</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Concern Line calls answered</div>
-      <div class="kpi-value kpi-sm">993</div>
+      <div class="kpi-value sm">993</div>
       <div class="kpi-sub">Jul 2025 – Mar 2026</div>
     </div>
   </div>
@@ -303,17 +315,17 @@ canvas { display: block; max-width: 100%; }
       <div class="kpi-value">993</div>
       <div class="kpi-sub">Jul 2025 – Mar 2026</div>
     </div>
-    <div class="kpi kpi-sm">
+    <div class="kpi">
       <div class="kpi-label">Daily average</div>
       <div class="kpi-value sm">~4</div>
       <div class="kpi-sub">Overall; recent months 6–7/day</div>
     </div>
-    <div class="kpi kpi-sm">
+    <div class="kpi">
       <div class="kpi-label">Median response time</div>
       <div class="kpi-value sm">10 min</div>
       <div class="kpi-sub">Dispatch to arrival on scene</div>
     </div>
-    <div class="kpi kpi-sm">
+    <div class="kpi">
       <div class="kpi-label">Within 15 minutes</div>
       <div class="kpi-value sm">73%</div>
       <div class="kpi-sub">Of all field engagements</div>
@@ -390,15 +402,17 @@ canvas { display: block; max-width: 100%; }
   </div>
 
   <div class="kpi-row k3">
-    <div class="kpi">
+    <div class="kpi" data-expand="1">
       <div class="kpi-label">People permanently housed</div>
       <div class="kpi-value">411</div>
       <div class="kpi-sub">Since 2016</div>
+      <div class="kpi-detail">72 placed in 2024 — the highest annual total on record. Placements include permanent supportive housing, rental vouchers, and other long-term housing options.</div>
     </div>
-    <div class="kpi accent2">
+    <div class="kpi accent2" data-expand="1">
       <div class="kpi-label">Placed in interim shelter</div>
       <div class="kpi-value">781</div>
       <div class="kpi-sub">New admissions since 2017</div>
+      <div class="kpi-detail">Admissions grew from 64 in 2021 to 151 in 2025. The Holloway Interim Housing Program added 20 in-city beds in October 2025.</div>
     </div>
     <div class="kpi accent3">
       <div class="kpi-label">Avg. shelter bed nights per year</div>
@@ -615,6 +629,7 @@ function showPage(id,el){
   document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active'); el.setAttribute('aria-selected','true');
   destroyAll(); renderPage(id);
+  setTimeout(function(){animateKPIs(id);},50);
 }
 
 // ── CHART ENGINE ──
@@ -742,7 +757,8 @@ function renderPage(id){
 // ── INIT ──
 function init(){
   let t;
-  window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{destroyAll();renderPage(currentPage);},150);});
+  window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{adjustCanvasHeightsHI();refreshExpandedKPIHeights();destroyAll();renderPage(currentPage);},150);});
+  setTimeout(function(){animateKPIs('overview');initExpandableKPIs();},200);
 }
 if(document.readyState==='complete') requestAnimationFrame(()=>requestAnimationFrame(init));
 else window.addEventListener('load',()=>requestAnimationFrame(()=>requestAnimationFrame(init)));
@@ -751,6 +767,77 @@ else window.addEventListener('load',()=>requestAnimationFrame(()=>requestAnimati
 // TOOLTIP SYSTEM
 // ══════════════════════════════════════════════
 const tooltip = document.getElementById('chart-tooltip');
+
+
+function countUp(el, target, duration) {
+  if (!el) return;
+  var isDecimal = String(target).indexOf('.') > -1;
+  var isCurrency = el.textContent.indexOf('$') > -1 || el.textContent.indexOf('+') > -1;
+  var suffix = el.getAttribute('data-suffix') || '';
+  var prefix = el.getAttribute('data-prefix') || '';
+  var start = 0, startTime = null;
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    var progress = Math.min((ts - startTime) / duration, 1);
+    var ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    var val = start + (target - start) * ease;
+    var display = isDecimal ? val.toFixed(1) : Math.round(val).toLocaleString();
+    el.textContent = prefix + display + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function animateKPIs(pageId) {
+  var page = document.getElementById('page-' + pageId);
+  if (!page) return;
+  page.querySelectorAll('.kpi-value').forEach(function(el) {
+    var raw = el.textContent.trim();
+    // Parse the number out of the text
+    var prefix = '', suffix = '', num;
+    if (raw.indexOf('~') === 0) { prefix = '~'; raw = raw.slice(1); }
+    if (raw.indexOf('$') === 0) { prefix = '$'; raw = raw.slice(1); }
+    if (raw.slice(-1) === '+') { suffix = '+'; raw = raw.slice(0, -1); }
+    if (raw.slice(-1) === 'M') { suffix = 'M'; raw = raw.slice(0, -1); }
+    if (raw.slice(-1) === '%') { suffix = '%'; raw = raw.slice(0, -1); }
+    num = parseFloat(raw.replace(/,/g, ''));
+    if (isNaN(num) || num === 0) return;
+    el.setAttribute('data-prefix', prefix);
+    el.setAttribute('data-suffix', suffix);
+    el.setAttribute('data-target', num);
+    el.textContent = prefix + '0' + suffix;
+    setTimeout(function() { countUp(el, num, 900); }, 100);
+  });
+}
+
+
+function initExpandableKPIs() {
+  document.querySelectorAll('.kpi[data-expand]').forEach(function(card) {
+    var detail = card.querySelector('.kpi-detail');
+    if (!detail) return;
+    card.style.cursor = 'pointer';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-expanded', 'false');
+
+    function toggleCard() {
+      var isOpen = card.classList.contains('kpi-expanded');
+      card.classList.toggle('kpi-expanded', !isOpen);
+      card.setAttribute('aria-expanded', String(!isOpen));
+      detail.style.maxHeight = isOpen ? '0px' : (detail.scrollHeight + 24) + 'px';
+      detail.style.paddingTop = isOpen ? '0' : '10px';
+      detail.style.opacity = isOpen ? '0' : '1';
+    }
+
+    card.addEventListener('click', toggleCard);
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleCard();
+      }
+    });
+  });
+}
 
 function showTooltip(x, y, content) {
   if (!tooltip) return;
@@ -830,6 +917,12 @@ function attachDonutTooltips(id, labels, values) {
   }, hideTooltip);
 }
 
+function refreshExpandedKPIHeights() {
+  document.querySelectorAll('.kpi.kpi-expanded .kpi-detail').forEach(function(detail) {
+    detail.style.maxHeight = (detail.scrollHeight + 24) + 'px';
+  });
+}
+
 
 // ── MOBILE CANVAS HEIGHT ADJUSTMENT ──
 function adjustCanvasHeightsHI() {
@@ -846,8 +939,8 @@ function adjustCanvasHeightsHI() {
     });
   }
 }
-window.addEventListener('resize', function() { adjustCanvasHeightsHI(); destroyAll(); renderPage(currentPage); });
-adjustCanvasHeightsHI();
+// Canvas height adjustment — deferred to after DOM ready
+document.addEventListener('DOMContentLoaded', function() { adjustCanvasHeightsHI(); });
 
 
 // ══ PIT DATA & MAP ══
@@ -858,12 +951,13 @@ const PIT_MO_2025={"Jan": 59, "Feb": 52, "Mar": 55, "Apr": 55, "May": 59, "Jun":
 const PIT_YR_AVGS=[30.4, 38.8, 49.5, 43.4, 39.4, 41.7, 47.1, 51.4, 55];
 const PIT_YR_LBLS=["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
 const PIT_MONTHS9=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
-let _pitMap=null,_pitDots=null,_pitBoundary=null;
+let _pitMap=null,_pitDots=null,_pitBoundary=null,_pitReady=false;
 
 function pitPopulateMonths(target){
   var yr=document.getElementById("pit-year-sel").value;
   var sel=document.getElementById("pit-month-sel");
   var cur=target!==undefined?target:sel.value;
+  sel.onchange=null;
   sel.innerHTML='<option value="all">All months</option>';
   var data=yr==="all"?PIT_PTS:PIT_PTS.filter(function(p){return String(p[5])===yr;});
   var seen={};data.forEach(function(p){seen[p[4]]=1;});
@@ -873,10 +967,11 @@ function pitPopulateMonths(target){
     sel.appendChild(o);
   });
   if(cur){sel.value=cur;}
+  sel.onchange=pitFilter;
 }
-function pitFilter(){pitPopulateMonths();if(_pitMap)pitRenderMap();}
+function pitFilter(){pitPopulateMonths();if(_pitReady&&_pitMap)pitRenderMap();}
 function pitRenderMap(){
-  if(typeof L==="undefined"||!_pitMap)return;
+  if(!_pitReady||typeof L==="undefined"||!_pitMap)return;
   var yr=document.getElementById("pit-year-sel").value;
   var mo=document.getElementById("pit-month-sel").value;
   var data=PIT_PTS;
@@ -951,6 +1046,12 @@ function drawLine(id,labels,values,opts){
     ctx.fillStyle="#6b7a99";ctx.font="11px Arial";ctx.textAlign="center";
     ctx.fillText(labels[i],toX(i),H-6);
   }
+  // Tooltip hit areas for line chart
+  var _lineHits=[];
+  for(var i=0;i<values.length;i++){
+    _lineHits.push({x:toX(i)-12,y:toY(values[i])-12,w:24,h:24,label:labels[i],value:values[i]});
+  }
+  attachBarTooltips(id,_lineHits);
   chartInstances[id]=true;
 }
 function pitInit(){
@@ -964,6 +1065,7 @@ function pitInit(){
     }).addTo(_pitMap);
   }
   pitLoadBoundary();
+  _pitReady=true;
   pitRenderMap();
   setTimeout(function(){if(_pitMap)_pitMap.invalidateSize();},150);
 }

@@ -220,7 +220,7 @@ canvas { display: block; max-width: 100%; }
     </div>
     <div class="kpi">
       <div class="kpi-label">Concern Line calls answered</div>
-      <div class="kpi-value sm">993</div>
+      <div class="kpi-value sm">1,134</div>
       <div class="kpi-sub">Jul 2025 – Mar 2026</div>
     </div>
   </div>
@@ -312,13 +312,13 @@ canvas { display: block; max-width: 100%; }
   <div class="kpi-row k4">
     <div class="kpi">
       <div class="kpi-label">Total requests</div>
-      <div class="kpi-value">993</div>
+      <div class="kpi-value">1,134</div>
       <div class="kpi-sub">Jul 2025 – Mar 2026</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Daily average</div>
       <div class="kpi-value sm">~4</div>
-      <div class="kpi-sub">Overall; recent months 6–7/day</div>
+      <div class="kpi-sub">Overall; recent months 7–8/day</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Median response time</div>
@@ -364,9 +364,9 @@ canvas { display: block; max-width: 100%; }
   <div class="cgrid">
     <div class="card">
       <div class="ct">Daily request rate — by month</div>
-      <div class="cn">Requests per day; July and March are partial months</div>
+      <div class="cn">Requests per day; July is a partial month</div>
       <canvas id="c-monthly" height="200"></canvas>
-      <p class="fn-text">Rates shown for fair comparison across full and partial months. Jul: Jul 15–31 (17 days) · Mar: Mar 1–15 (15 days).</p>
+      <p class="fn-text">Rates shown for fair comparison across full and partial months. Jul: Jul 16–31 (16 days).</p>
     </div>
     <div class="card">
       <div class="ct">Why people reach out</div>
@@ -531,7 +531,7 @@ canvas { display: block; max-width: 100%; }
     </div>
     <div class="tk">
       <div class="ti"><svg viewBox="0 0 16 16" fill="none"><path d="M2 13L6 5L9 10L11 7L14 13H2Z" fill="#fff"/></svg></div>
-      <div class="tt"><strong>HCL serves as a primary access point</strong>993 requests routed in nine months, with 73% of teams arriving within 15 minutes. The line is growing — recent months averaging 6–7 requests per day as community awareness increases.</div>
+      <div class="tt"><strong>HCL serves as a primary access point</strong>1,134 requests routed in nine months, with 73% of teams arriving within 15 minutes. The line is growing — recent months averaging 7–8 requests per day as community awareness increases.</div>
     </div>
     <div class="tk">
       <div class="ti"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="2"/><path d="M5 8L7 10L11 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
@@ -600,18 +600,19 @@ const B1='#003087',B2='#5B9BD5',B3='#8FBBDB',B4='#B8D4EA';
 // ── DATA ──
 const D = {
   // HCL daily rates (requests/day)
-  hclMonthly: { labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'], values:[2.0,2.2,2.7,2.2,3.6,4.4,6.2,7.6,6.4] },
+  hclMonthly: { labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'], values:[2.1,2.2,2.7,2.2,3.6,4.4,6.2,7.6,7.7] },
   hclReasons: [
-    {label:'Housing / resource / outreach', val:513, pct:'52%', color:B1},
-    {label:'Medical / health / mental health', val:168, pct:'17%', color:B1},
-    {label:'Welfare / wellness check',         val:149, pct:'15%', color:B2},
-    {label:'Administrative',                   val:66,  pct:'7%',  color:B3},
-    {label:'Disturbance / safety concern',     val:52,  pct:'5%',  color:B3},
-    {label:'Other',                            val:45,  pct:'5%',  color:B4},
+    {label:'Housing / resource / services request', val:513, pct:'45%', color:B1},
+    {label:'Medical / mental health / substance use', val:191, pct:'17%', color:B1},
+    {label:'Welfare / wellness check',               val:164, pct:'14%', color:B2},
+    {label:'Outreach / engagement request',          val:118, pct:'10%', color:B3},
+    {label:'Administrative / non-incident',          val:66,  pct:'6%',  color:B3},
+    {label:'Other / multiple',                       val:46,  pct:'4%',  color:B4},
+    {label:'Disturbance / safety concern',           val:36,  pct:'3%',  color:B3},
   ],
-  hclOutcomes: { labels:['Accepted services','Declined services','Unable to locate','Outcome pending / unknown'], values:[381,228,185,199], colors:[B1,B3,B2,B4] },
-  hclTime:  { labels:['6–9 AM','9 AM–12','12–3 PM','3–6 PM','6 PM+'], values:[214,256,282,208,19] },
-  hclDow:   { labels:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], values:[114,146,148,136,156,179,114] },
+  hclOutcomes: { labels:['Accepted services','Declined services','Unable to locate','Outcome pending / unknown'], values:[430,278,215,211], colors:[B1,B3,B2,B4] },
+  hclTime:  { labels:['6–9 AM','9 AM–12','12–3 PM','3–6 PM','6 PM+'], values:[230,300,328,237,25] },
+  hclDow:   { labels:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], values:[133,173,170,157,172,203,126] },
   // Housing outcomes — totals only, no provider breakout
   years: ['2021','2022','2023','2024','2025'],
   permTotal:  [50, 49, 57, 72, 44],
@@ -696,7 +697,7 @@ function drawDonut(id,labels,values,colors){
   });
   ctx.beginPath();ctx.arc(cx,cy,ir,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
   canvas._donutGeom={cx,cy,r,ir};
-  ctx.fillStyle=B1;ctx.font='bold 18px Arial';ctx.textAlign='center';ctx.fillText('993',cx,cy-2);
+  ctx.fillStyle=B1;ctx.font='bold 18px Arial';ctx.textAlign='center';ctx.fillText('1,134',cx,cy-2);
   ctx.fillStyle='#9aa5be';ctx.font='12px Arial';ctx.fillText('requests',cx,cy+13);
   labels.forEach((lbl,i)=>{
     const col=i%2,row=Math.floor(i/2);

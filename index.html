@@ -384,9 +384,10 @@ svg.chart-svg {
   font-weight:700;
 }
 .row-value {
-  font-size:12px;
-  color:var(--muted);
-  font-weight:700;
+  font-size: 12px;
+  color: #6b7a99;
+  font-weight: 600;
+  letter-spacing: .2px;
 }
 .map-shell {
   border:1px solid var(--line);
@@ -538,7 +539,7 @@ svg.chart-svg {
   z-index: 9999;
   pointer-events: none;
   background: rgba(17,28,45,.96);
-  color: #fff;
+  color: #ffffff;
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 12px;
@@ -552,17 +553,22 @@ svg.chart-svg {
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
-  font-family: Arial, Helvetica, sans-serif;
 }
+
 .tooltip.show { opacity: 1; transform: translateY(0); }
+
 .tooltip strong {
   display: block;
   margin-bottom: 2px;
-  white-space: normal;
+  color: #ffffff;
+  font-weight: 600;
 }
 
-
-/* Layout & text containment fixes */
+.tooltip .secondary,
+.tooltip .muted {
+  color: #9ec4e7;
+  font-weight: 500;
+}/* Layout & text containment fixes */
 .card, .kpi, .step, .service, .takeaway, .banner {
   min-width: 0;
   max-width: 100%;

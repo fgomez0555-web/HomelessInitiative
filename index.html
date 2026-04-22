@@ -454,27 +454,7 @@ svg.chart-svg {
   flex-wrap:wrap;
   letter-spacing:.1px;
 }
-.tooltip {
-  position:fixed;
-  z-index:999;
-  pointer-events:none;
-  background:rgba(17,28,45,.96);
-  color:#fff;
-  border-radius:12px;
-  padding:10px 12px;
-  font-size:12px;
-  line-height:1.5;
-  box-shadow:0 12px 30px rgba(0,0,0,.24);
-  max-width:240px;
-  opacity:0;
-  transform:translateY(6px);
-  transition:opacity .12s ease, transform .12s ease;
-}
-.tooltip.show {
-  opacity:1;
-  transform:translateY(0);
-}
-.tooltip strong { display:block; margin-bottom:2px; font-size:12px; }
+
 
 /* overflow protection */
 * { overflow-wrap: break-word; word-break: normal; }
@@ -562,17 +542,24 @@ svg.chart-svg {
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.45;
   box-shadow: 0 8px 24px rgba(0,0,0,.22);
-  max-width: 220px;
+  max-width: min(260px, calc(100vw - 24px));
+  min-width: 110px;
   opacity: 0;
   transform: translateY(4px);
   transition: opacity .12s ease, transform .12s ease;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   font-family: Arial, Helvetica, sans-serif;
 }
 .tooltip.show { opacity: 1; transform: translateY(0); }
-.tooltip strong { display: block; margin-bottom: 2px; }
+.tooltip strong {
+  display: block;
+  margin-bottom: 2px;
+  white-space: normal;
+}
 
 
 /* Layout & text containment fixes */
@@ -632,7 +619,7 @@ svg.chart-svg {
 <div class="main">
   <section class="page active" id="page-overview">
     <div class="hero">
-      Since 2018, West Hollywood has invested approximately <strong>$8 million annually</strong> — about 5% of the City’s operating budget — in social services, including a coordinated system of services to <strong>prevent and address homelessness</strong>. The system has provided <strong>over 1,800 households</strong> with rental assistance to prevent homelessness, placed <strong>781 individuals</strong> in interim shelter, and assisted <strong>411 people</strong> in securing permanent housing. The City is now advancing coordination across that system, building on existing investments and improving the number of people remaining and becoming housed.
+      Since 2018, West Hollywood has invested approximately <strong>$8 million annually</strong> — about 5% of the City’s operating budget — in social services, including a coordinated system of services to <strong>prevent homelessness where possible and address homelessness when it occurs</strong>. City-funded programs have provided <strong>over 1,800 households</strong> with rental assistance to prevent homelessness, placed <strong>781 individuals</strong> in interim shelter, and assisted <strong>411 people</strong> in securing permanent housing. The City is now advancing coordination across that system, building on existing investments and increasing the number of people who become and remain housed.
       <small>* Outcome tracking began in 2017 and has continued to be strengthened over time as data collection and reporting practices matured.</small>
     </div>
 
@@ -659,7 +646,7 @@ svg.chart-svg {
         <div class="k-label">Concern Line requests</div>
         <div class="k-value">1,134</div>
         <div class="k-sub">Jul 2025–Mar 2026</div>
-        <div class="k-detail">The Homeless Concern Line now serves as a major entry point into the response system and supports more consistent routing of community requests.</div>
+        <div class="k-detail">The Homeless Concern Line is increasingly serving as a primary entry point into the response system and supports more consistent routing of community requests.</div>
       </div>
     </div>
 
@@ -680,7 +667,7 @@ svg.chart-svg {
         <div class="step">
           <div class="step-num">3</div>
           <h4>Interim housing placement</h4>
-          <p>When an individual is ready to accept placement, City-funded outreach teams and case managers work to connect them to an appropriate interim housing option. The <strong>Holloway Interim Housing Program</strong> serves West Hollywood community members experiencing chronic homelessness and living with a disability. Other interim and emergency shelter options are available for those who do not meet those criteria, including youth transitional housing.</p>
+          <p>When an individual is ready to accept placement, City-funded outreach teams and case managers work to connect them to an appropriate interim housing option. The <strong>Holloway Interim Housing Program</strong> serves West Hollywood community members experiencing chronic homelessness and a disability. Other interim and emergency shelter options are available for those who do not meet those criteria, including youth transitional housing.</p>
         </div>
         <div class="step">
           <div class="step-num">4</div>
@@ -694,7 +681,7 @@ svg.chart-svg {
     <p class="section-sub">The City funds services across six core areas.</p>
     <div class="service-grid">
       <div class="service"><h4>Street outreach &amp; crisis response</h4><p>Trained teams engage people experiencing homelessness where they are, provide care, connect them to services, and respond to behavioral health and related service needs 24/7.</p></div>
-      <div class="service"><h4>Interim &amp; emergency shelter</h4><p>Short-term housing placements for individuals working toward permanent housing. Holloway serves West Hollywood community members experiencing chronic homelessness and living with a disability. Additional options remain available for others, including transitional housing for youth.</p></div>
+      <div class="service"><h4>Interim &amp; emergency shelter</h4><p>Short-term housing placements for individuals working toward permanent housing. Holloway serves West Hollywood community members experiencing chronic homelessness and a disability. Additional options remain available for others, including transitional housing for youth.</p></div>
       <div class="service"><h4>Permanent housing placement</h4><p>Case managers help connect individuals to permanent supportive housing, vouchers, and other long-term housing opportunities — 411 people housed since 2016.</p></div>
       <div class="service"><h4>Rental assistance &amp; eviction prevention</h4><p>Financial help for households at risk of losing housing, including emergency rental assistance for older adults and people living with HIV, as well as eviction defense support.</p></div>
       <div class="service"><h4>Health &amp; recovery services</h4><p>Medical care, behavioral health support, substance use recovery, and HIV-related services help stabilize individuals and reduce the risk of housing loss or future homelessness.</p></div>
@@ -704,7 +691,7 @@ svg.chart-svg {
     <div class="banner" style="margin-top:18px;">
       <div class="eyebrow">Next phase</div>
       <h3>Coordinated Response Framework</h3>
-      <p>West Hollywood has expanded its homelessness response system over time, including 24/7 operation of the Homeless Concern Line and the opening of the Holloway Interim Housing Program. The City is now developing a <strong>Coordinated Response Framework (CRF)</strong> to strengthen coordination across outreach teams, interim housing providers, housing programs, behavioral health responders, and public safety partners. The goal is to improve consistency, clarify roles, and support more effective movement through the local response system — with better housing outcomes for community members experiencing homelessness.</p>
+      <p>West Hollywood has expanded its homelessness response system over time, including 24/7 operation of the Homeless Concern Line and the opening of the Holloway Interim Housing Program. The City is now developing a <strong>Coordinated Response Framework (CRF)</strong> to strengthen coordination across outreach teams, interim housing providers, housing programs, behavioral health responders, and public safety partners. The goal is to improve consistency, clarify roles, and support more effective movement through the system — with better housing outcomes for community members experiencing homelessness.</p>
     </div>
   </section>
 
@@ -794,7 +781,7 @@ svg.chart-svg {
     <div class="grid panel-grid two" style="margin-top:16px;">
       <div class="card">
         <h3>Why people reach out</h3>
-        <div class="note">Nearly 87% of requests are care-oriented.</div>
+        <div class="note">Approximately 87% of requests are care-oriented based on current classification categories.</div>
         <div id="hcl-reasons" class="rows"></div>
       </div>
       <div class="card">
@@ -822,7 +809,7 @@ svg.chart-svg {
 
   <section class="page" id="page-housing">
     <div class="hero">
-      West Hollywood’s housing programs continue to connect community members to interim and permanent housing. In 2024, <strong>72 individuals</strong> were permanently housed — the highest annual total since 2017. The Holloway Interim Housing Program opened in October 2025 and reached full occupancy shortly after opening. Holloway serves West Hollywood community members experiencing chronic homelessness and living with a disability.
+      West Hollywood’s housing programs continue to connect community members to interim and permanent housing. In 2024, <strong>72 individuals</strong> were permanently housed — the highest annual total since 2017. The Holloway Interim Housing Program opened in October 2025 and reached full occupancy shortly after opening. Holloway serves West Hollywood community members experiencing chronic homelessness and a disability.
       <small>* Outcome tracking began in 2017 and has continued to be strengthened over time as data collection and reporting practices matured. Permanent housing placements for people experiencing chronic homelessness often take many months to complete because of documentation, benefits eligibility, applications, waitlists, inspections, and subsidy approvals.</small>
     </div>
 
@@ -835,7 +822,7 @@ svg.chart-svg {
     <div class="grid panel-grid two" style="margin-top:16px;">
       <div class="card">
         <h3>Permanent housing placements — by year</h3>
-        <div class="note">2024 was a record year.</div>
+        <div class="note">2024 represents the highest annual total in available data.</div>
         <div id="housing-perm" class="chart compact"></div>
       </div>
       <div class="card">
@@ -860,7 +847,7 @@ svg.chart-svg {
 
   <section class="page" id="page-prevention">
     <div class="hero">
-      In addition to outreach and housing interventions, West Hollywood funds services that help prevent homelessness and support housing stability — including rental assistance, eviction defense, legal advocacy, and specialized services for older adults and people living with HIV. The City initially contracted with Alliance for Housing and Healing (later APLA Health) to provide rental assistance for residents living with HIV and later expanded in 2009 to include older adults through APLA Health and younger residents through NCJW|LA. Since 2018, more than <strong>$2.6 million</strong> in direct rental assistance has been provided to households in need.
+      In addition to outreach and housing interventions, West Hollywood funds services that help prevent homelessness and support housing stability — including rental assistance, eviction defense, legal advocacy, and specialized services for older adults and people living with HIV. The City has historically funded rental assistance programs through providers including Alliance for Housing and Healing (now APLA Health), with expansions over time to include older adults and younger residents through additional providers. Since 2018, more than <strong>$2.6 million</strong> in direct rental assistance has been provided to households in need.
     </div>
 
     <div class="grid kpi-grid k3">

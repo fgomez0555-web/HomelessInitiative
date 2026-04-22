@@ -598,6 +598,17 @@ svg.chart-svg {
   font-family: Arial, Helvetica, sans-serif !important;
 }
 
+
+/* Remove chart data labels (tooltips used instead) */
+.data-label,
+.chart-label,
+.chart-value,
+.bar-label,
+.donut-label,
+.value-label {
+  display: none !important;
+}
+
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1036,7 +1047,6 @@ function renderBarChart(targetId, labels, values, opts={}) {
     const tip = pyEscape(`<strong>${lbl}</strong>${fmt(v)}`);
     s += `<rect class="bar" data-tip="${tip}" x="${x}" y="${y}" rx="8" ry="8" width="${bW}" height="${Math.max(2,bh)}"
           fill="${color}"></rect>`;
-    s += `<text x="${x+bW/2}" y="${Math.min(H-45, y-8)}" text-anchor="middle" font-size="12" font-weight="700" fill="#19314f">${v}</text>`;
     s += `<text x="${pad.l + i*gW + gW/2}" y="${H-10}" text-anchor="middle" class="axis">${lbl}</text>`;
   });
   el.innerHTML = svgWrap(s, `0 0 ${W} ${H}`);
@@ -1066,7 +1076,6 @@ function renderLineChart(targetId, labels, values, opts={}) {
     const x = toX(i), y = toY(values[i]);
     const tip = pyEscape(`<strong>${lbl}</strong>${values[i]} average individuals observed`);
     s += `<circle class="point" data-tip="${tip}" cx="${x}" cy="${y}" r="5.5" fill="${COLORS.blue}" stroke="#fff" stroke-width="2"></circle>`;
-    s += `<text x="${x}" y="${y-10}" text-anchor="middle" font-size="12" font-weight="700" fill="#19314f">${values[i]}</text>`;
     s += `<text x="${x}" y="${H-8}" text-anchor="middle" class="axis">${lbl}</text>`;
   });
   el.innerHTML = svgWrap(s);
@@ -1094,8 +1103,6 @@ function renderDonut(targetId, labels, values, colors, opts={}) {
     start = end;
   });
   s += `<circle cx="${cx}" cy="${cy}" r="${inner-1}" fill="#fff"></circle>`;
-  s += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="28" font-weight="800" fill="${COLORS.blue}">${total}</text>`;
-  s += `<text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="12" fill="#7a8aa0">requests</text>`;
   // Wrap in a flex container with HTML legend alongside
   const svgHtml = `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="max-width:240px;flex-shrink:0;">${s}</svg>`;
   const legendHtml = labels.map((lbl,i) => {

@@ -75,45 +75,47 @@ a { color:inherit; }
   z-index:19;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background:rgba(244,248,252,.96);
-  border-bottom:1px solid rgba(210,224,240,.8);
+  background:rgba(244,248,252,.98);
+  border-bottom:1px solid rgba(210,224,240,.9);
+  box-shadow:0 2px 8px rgba(0,30,90,.05);
 }
 .tabs {
   max-width:1300px;
   margin:0 auto;
   display:flex;
   flex-wrap:wrap;
-  gap:6px;
-  padding:10px 20px;
+  gap:8px;
+  padding:12px 20px;
 }
 .tab {
-  border:none;
-  background:transparent;
-  color:var(--muted);
-  border-radius:6px;
-  padding:8px 14px;
+  border:1.5px solid var(--line);
+  background:#fff;
+  color:#3a4f6a;
+  border-radius:999px;
+  padding:9px 20px;
   font-size:13px;
   font-weight:700;
   cursor:pointer;
   white-space:nowrap;
-  transition:.15s ease;
-  letter-spacing:.1px;
+  transition:background .14s ease, color .14s ease, border-color .14s ease, box-shadow .14s ease, transform .12s ease;
+  letter-spacing:.15px;
   position:relative;
+  box-shadow:0 1px 3px rgba(0,30,90,.07);
 }
-.tab::after {
-  content:'';
-  position:absolute;
-  bottom:-10px;
-  left:14px;
-  right:14px;
-  height:3px;
-  border-radius:2px;
-  background:transparent;
-  transition:.15s ease;
+.tab:hover {
+  background:#f0f5ff;
+  color:var(--blue);
+  border-color:#a8c0e0;
+  box-shadow:0 2px 8px rgba(0,48,135,.12);
+  transform:translateY(-1px);
 }
-.tab:hover { background:#edf2fa; color:var(--blue); }
-.tab.active { color:var(--blue); background:#e8f0fc; }
-.tab.active::after { background:var(--blue); }
+.tab.active {
+  background:var(--blue);
+  color:#fff;
+  border-color:var(--blue);
+  box-shadow:0 3px 12px rgba(0,48,135,.28);
+}
+.tab.active:hover { transform:none; }
 .main {
   max-width:1300px;
   margin:0 auto;
@@ -514,25 +516,27 @@ svg.chart-svg {
   .tab {
     width:100%;
     text-align:center;
-    padding:10px 8px;
+    padding:11px 8px;
     font-size:13px;
-    border-radius:10px;
-    background:#f3f6fb;
+    border-radius:999px;
+    border:1.5px solid var(--line);
+    background:#fff;
     white-space:normal;
     line-height:1.3;
+    box-shadow:0 1px 3px rgba(0,30,90,.07);
   }
   .tab.active {
-    background:#e8f0fc;
-    color:var(--blue);
-    font-weight:700;
+    background:var(--blue);
+    color:#fff;
+    border-color:var(--blue);
+    box-shadow:0 3px 10px rgba(0,48,135,.25);
   }
-  .tab::after { display:none; }
   #pit-map { height:360px !important; }
 }
 @media (max-width: 520px) {
   .kpi-grid.k4, .kpi-grid.k3 { grid-template-columns:1fr; }
-  .tabs { gap:8px; padding:10px 12px; }
-  .tab { padding:10px 8px; font-size:12px; }
+  .tabs { gap:6px; padding:8px 10px; }
+  .tab { padding:10px 6px; font-size:12px; border-radius:999px; }
   .rows .row { grid-template-columns:1fr auto; }
   .map-box, #pit-map { height:320px !important; }
   .header h1 { font-size:clamp(18px,6vw,24px); }
@@ -993,7 +997,7 @@ function activatePage(page) {
   renderVisible();
   setTimeout(function() { animatePageNumbers(page); }, 60);
   if (page === 'pit' && !_pitReady) {
-    setTimeout(() => {
+    waitForLeaflet(function() {
       if (!_pitMap) {
         _pitMap = L.map('pit-map').setView([34.0887, -118.3671], 14);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -1005,8 +1009,8 @@ function activatePage(page) {
       populatePitMonths('Sep 2025');
       pitRenderMap();
       pitFilter();
-      setTimeout(() => { if (_pitMap) _pitMap.invalidateSize(); }, 200);
-    }, 50);
+      setTimeout(function() { if (_pitMap) _pitMap.invalidateSize(); }, 200);
+    });
   }
 }
 
@@ -1138,6 +1142,26 @@ function renderRows(targetId, rows) {
 
 function pyEscape(str) {
   return String(str).replaceAll('&','&amp;').replaceAll('"','&quot;');
+}
+
+// Wait for Leaflet to be available before initializing the map
+function waitForLeaflet(callback) {
+  if (typeof L !== 'undefined') {
+    callback();
+    return;
+  }
+  var attempts = 0;
+  var interval = setInterval(function() {
+    attempts++;
+    if (typeof L !== 'undefined') {
+      clearInterval(interval);
+      callback();
+    } else if (attempts > 50) {
+      clearInterval(interval);
+      var el = document.getElementById('pit-map');
+      if (el) el.innerHTML = '<div style="padding:24px;color:#5f7088;font-size:13px;">Map could not load — please check your internet connection and refresh.</div>';
+    }
+  }, 100);
 }
 
 let _pitMap = null, _pitDots = null, _pitBoundary = null, _pitReady = false;

@@ -738,6 +738,98 @@ svg.chart-svg {
 }
 
 
+/* HCL checklist month filter */
+.hcl-filter-card {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 16px;
+  margin-bottom:12px;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+  box-shadow:0 1px 6px rgba(0,30,90,.06);
+}
+.hcl-filter-title {
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  white-space:nowrap;
+  padding-top:8px;
+}
+.hcl-checklist {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  flex:1 1 560px;
+}
+.hcl-month-option {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:7px 10px;
+  background:#fff;
+  color:#425872;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  user-select:none;
+  transition:background .14s ease, border-color .14s ease, color .14s ease, box-shadow .14s ease;
+}
+.hcl-month-option:hover {
+  background:#f0f5ff;
+  border-color:#a8c0e0;
+  color:var(--blue);
+}
+.hcl-month-option input {
+  accent-color:var(--blue);
+  margin:0;
+}
+
+.hcl-month-option span {
+  white-space: nowrap;
+}
+.hcl-month-option:has(input:checked) {
+  background:var(--blue);
+  border-color:var(--blue);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(0,48,135,.18);
+}
+.hcl-filter-actions {
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  align-items:flex-start;
+}
+.hcl-reset-btn {
+  padding:7px 12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  background:#fff;
+  color:var(--muted);
+}
+.hcl-reset-btn:hover { background:#f7faff; color:var(--blue); }
+#hcl-filter-count {
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4;
+}
+@media (max-width: 820px) {
+  .hcl-filter-card { padding:11px 12px; gap:10px; }
+  .hcl-filter-title { width:100%; padding-top:0; }
+  .hcl-checklist { flex-basis:100%; gap:6px; }
+  .hcl-month-option { padding:6px 9px; font-size:11.5px; }
+}
+
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -944,16 +1036,13 @@ svg.chart-svg {
     </div>
 
     <!-- HCL Month Filter -->
-    <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 1px 6px rgba(0,30,90,.06);">
-      <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;">Filter by month</span>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <select id="hcl-month-select" multiple onchange="hclOnMonthSelect()" size="4"
-          style="font-size:13px;font-family:Arial,Helvetica,sans-serif;border:1px solid var(--line);border-radius:6px;padding:4px 6px;color:#27405f;min-width:160px;cursor:pointer;height:auto;">
-        </select>
-        <span style="font-size:10px;color:var(--muted);">Ctrl/⌘-click to select multiple · click again to deselect</span>
+    <div class="hcl-filter-card">
+      <span class="hcl-filter-title">Filter by month</span>
+      <div id="hcl-month-checklist" class="hcl-checklist" aria-label="Filter Homeless Concern Line data by month"></div>
+      <div class="hcl-filter-actions">
+        <button type="button" onclick="hclResetMonths()" class="hcl-reset-btn">All months</button>
+        <span id="hcl-filter-count"></span>
       </div>
-      <button onclick="hclResetMonths()" style="padding:6px 12px;border:1px solid var(--line);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--muted);align-self:flex-start;">All months</button>
-      <span id="hcl-filter-count" style="font-size:12px;color:var(--muted);margin-left:4px;"></span>
     </div>
 
     <div class="grid kpi-grid k4">
@@ -1515,15 +1604,31 @@ function hclRenderAll() {
 }
 
 function hclInitMonthDropdown() {
-  var sel = document.getElementById('hcl-month-select');
-  if (!sel) return;
-  sel.innerHTML = '';
-  HCL_MONTHS_ORDER.forEach(function(mo) {
-    var opt = document.createElement('option');
-    opt.value = mo; opt.textContent = mo;
-    sel.appendChild(opt);
+  var checklist = document.getElementById('hcl-month-checklist');
+  if (!checklist) return;
+  checklist.innerHTML = '';
+  HCL_MONTHS_ORDER.forEach(function(mo, idx) {
+    var label = document.createElement('label');
+    label.className = 'hcl-month-option';
+    label.setAttribute('for', 'hcl-month-' + idx);
+
+    var input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = 'hcl-month-' + idx;
+    input.value = mo;
+    input.addEventListener('change', hclOnMonthSelect);
+
+    var span = document.createElement('span');
+    // HCL filter chips show abbreviated month + full year for clarity across calendar years.
+    // PIT month labels remain unchanged because PIT already has a separate year filter.
+    span.textContent = mo;
+
+    label.appendChild(input);
+    label.appendChild(span);
+    checklist.appendChild(label);
   });
 }
+
 
 function hclPointNearWeho(lat, lon) {
   // Inline WeHo boundary coords (same as pitLoadBoundary source)
@@ -1571,11 +1676,11 @@ function hclRenderHeat() {
 }
 
 function hclOnMonthSelect() {
-  var sel = document.getElementById('hcl-month-select');
+  var checklist = document.getElementById('hcl-month-checklist');
   _hclSelectedMonths.clear();
-  if (sel) {
-    Array.from(sel.selectedOptions).forEach(function(opt) {
-      if (opt.value) _hclSelectedMonths.add(opt.value);
+  if (checklist) {
+    Array.from(checklist.querySelectorAll('input[type="checkbox"]:checked')).forEach(function(box) {
+      if (box.value) _hclSelectedMonths.add(box.value);
     });
   }
   hclRenderAll();
@@ -1583,10 +1688,13 @@ function hclOnMonthSelect() {
 
 function hclResetMonths() {
   _hclSelectedMonths.clear();
-  var sel = document.getElementById('hcl-month-select');
-  if (sel) Array.from(sel.options).forEach(function(o) { o.selected = false; });
+  var checklist = document.getElementById('hcl-month-checklist');
+  if (checklist) {
+    Array.from(checklist.querySelectorAll('input[type="checkbox"]')).forEach(function(box) { box.checked = false; });
+  }
   hclRenderAll();
 }
+
 
 // Wait for Leaflet to be available before initializing the map
 function waitForLeaflet(callback) {

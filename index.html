@@ -1418,6 +1418,58 @@ svg.chart-svg {
         <div class="kpi"><div class="k-label">Current waitlist</div><div class="k-value">3</div><div class="k-sub">Eligible West Hollywood community members</div></div>
       </div>
 
+      <!-- Occupancy & Utilization -->
+      <div class="holloway-subcard" style="margin-top:12px;">
+        <h4>Occupancy &amp; utilization</h4>
+        <p>Holloway reached its 90% occupancy target in its first quarter and is now operating at near full capacity.</p>
+
+        <!-- Target label row -->
+        <div style="position:relative;margin-top:14px;padding-right:0;">
+          <div style="position:absolute;left:90%;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:2;">
+            <div style="width:1px;height:100%;background:#5B9BD5;opacity:0.35;border-radius:1px;"></div>
+          </div>
+          <div style="text-align:right;padding-right:calc(10% - 2px);margin-bottom:6px;">
+            <span style="font-size:10px;font-weight:700;color:#5B9BD5;opacity:0.7;">90% target</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <!-- Q1 -->
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12.5px;font-weight:800;color:#0d2444;">Q1 · Oct–Dec 2025</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;">
+                  <span style="font-size:12px;font-weight:800;color:#003087;">90%</span>
+                  <span style="background:#d7e7f7;color:#003087;font-size:10px;font-weight:800;border-radius:999px;padding:2px 9px;white-space:nowrap;">Met Target</span>
+                </span>
+              </div>
+              <div style="height:20px;border-radius:999px;background:#edf3fa;overflow:hidden;">
+                <div style="height:100%;width:90%;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--blue3));"></div>
+              </div>
+              <div style="margin-top:4px;font-size:11px;color:var(--muted);">1,560 of 1,740 bed nights used</div>
+            </div>
+
+            <!-- Q2 -->
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12.5px;font-weight:800;color:#0d2444;">Q2 · Jan–Mar 2026</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;">
+                  <span style="font-size:12px;font-weight:800;color:#003087;">96%</span>
+                  <span style="background:#003087;color:#fff;font-size:10px;font-weight:800;border-radius:999px;padding:2px 9px;white-space:nowrap;">Exceeded Target</span>
+                </span>
+              </div>
+              <div style="height:20px;border-radius:999px;background:#edf3fa;overflow:hidden;">
+                <div style="height:100%;width:96%;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--blue2));"></div>
+              </div>
+              <div style="margin-top:4px;font-size:11px;color:var(--muted);">1,720 of 1,800 bed nights used</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div style="margin-top:10px;font-size:11px;color:var(--muted);font-style:italic;line-height:1.45;">Occupancy calculated using total available bed nights per quarter. Target set at 90% to allow for turnover, client intake review, and related processes.</div>
+      </div>
+
       <div class="holloway-split">
         <div class="holloway-subcard">
           <h4>Program flow</h4>
@@ -1427,12 +1479,13 @@ svg.chart-svg {
             <div class="mini-flow-item"><strong>20</strong><span>Currently enrolled</span></div>
             <div class="mini-flow-item"><strong>12</strong><span>Total exits<br><span style="font-size:11px;color:var(--muted);font-weight:600;">1 permanent · 11 non-permanent</span></span></div>
           </div>
+          <div style="margin-top:10px;font-size:12px;font-weight:700;color:#0d2444;">Progress toward 12 annual placements</div>
           <div class="progress-shell">
             <div class="progress-track" aria-label="Permanent housing progress toward annual goal" style="display:flex;">
               <div class="progress-fill" style="width:8.3%;border-radius:999px 0 0 999px;"></div>
               <div class="progress-fill pending" style="width:25%;border-radius:0 999px 999px 0;margin-left:2px;"></div>
             </div>
-            <div class="progress-caption"><span><strong>Permanent housing:</strong> 1 confirmed | 3 pending</span><span>Annual goal: 12</span></div>
+            <div class="progress-caption"><span><strong>Permanent housing:</strong> 1 confirmed | 3 in progress</span><span>Annual goal: 12</span></div>
           </div>
           <div class="holloway-insight"><strong>What this shows:</strong> Permanent housing outcomes are beginning to move, with additional placements expected in Q3. The program is also maintaining full occupancy while managing a small waitlist.</div>
         </div>
@@ -1457,7 +1510,26 @@ svg.chart-svg {
               <div class="holloway-bar-value">2</div>
             </div>
           </div>
-          <div class="holloway-insight">Only 2 of 11 non-permanent exits (18%) resulted in a return to homelessness — a low rate for an interim housing program. Most exits reflected movement to another setting or a self-directed transition. Staff are using exit data to strengthen orientation, placement matching, and warm handoffs.</div>
+          <div class="holloway-insight">2 of 11 non-permanent exits (18%) resulted in a return to homelessness — a low rate for an interim housing program. Most exits reflected movement to another setting or a self-directed transition. Staff are using exit data to strengthen orientation, placement matching, and warm handoffs.</div>
+        </div>
+      </div>
+
+      <div class="holloway-split" style="margin-top:12px;">
+        <div class="holloway-subcard">
+          <h4>Length of stay</h4>
+          <div class="holloway-topline" style="grid-template-columns:repeat(2,1fr);margin-top:10px;">
+            <div class="holloway-mini">
+              <div class="mini-label">Permanent housing exit</div>
+              <div class="mini-value">57 days</div>
+              <div class="mini-sub">1 confirmed exit (Dec 2025)</div>
+            </div>
+            <div class="holloway-mini">
+              <div class="mini-label">All other exits (n=11)</div>
+              <div class="mini-value">~46 days</div>
+              <div class="mini-sub">Most left before the 90-day limit</div>
+            </div>
+          </div>
+          <div class="holloway-insight" style="margin-top:10px;">Based on 12 completed exits. The 20 currently enrolled are not included — their stays are still in progress.</div>
         </div>
       </div>
 
@@ -1512,6 +1584,9 @@ svg.chart-svg {
           <div class="holloway-insight">Demographics are tracked to support program planning, equity review, and alignment with City homelessness data over time.</div>
         </div>
       </div>
+
+
+
     </div>
   </section>
 

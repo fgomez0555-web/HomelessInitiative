@@ -1081,13 +1081,19 @@ svg.chart-svg {
 /* Embed mode: use ?embed=true in iframe URL */
 body.embed {
   background:#ffffff;
+  /* Prevent horizontal scroll in iframe */
+  overflow-x:hidden;
 }
 body.embed .header {
   display:none;
 }
 body.embed .tabs-wrap {
-  top:0;
+  /* Use relative instead of sticky — sticky breaks in auto-height iframes */
+  position:relative;
+  top:auto;
   box-shadow:0 2px 8px rgba(0,30,90,.06);
+  /* Keep tabs visible at top without relying on scroll */
+  z-index:10;
 }
 body.embed .tabs-label,
 body.embed .tab-desc {
@@ -1096,10 +1102,16 @@ body.embed .tab-desc {
 body.embed .tabs {
   padding:8px 12px;
   gap:7px;
+  /* Always flex-wrap in embed so tabs never overflow */
+  display:flex;
+  flex-wrap:wrap;
 }
 body.embed .tab {
-  padding:8px 12px;
+  padding:8px 14px;
   border-radius:999px;
+  /* Auto width so tabs wrap naturally */
+  width:auto !important;
+  white-space:nowrap;
 }
 body.embed .tab-icon {
   display:none;
@@ -1118,15 +1130,31 @@ body.embed .hero {
 body.embed .foot {
   display:none;
 }
-@media (max-width: 820px) {
-  body.embed .tabs {
-    display:flex;
-    flex-wrap:wrap;
+/* Force single-column layouts earlier in embed (Granicus columns ~700-800px) */
+@media (max-width: 900px) {
+  body.embed .panel-grid.two,
+  body.embed .takeaways,
+  body.embed .kpi-grid.k3,
+  body.embed .kpi-grid.k4,
+  body.embed .service-grid,
+  body.embed .flow {
+    grid-template-columns: 1fr;
   }
-  body.embed .tab {
-    width:auto;
+  body.embed .holloway-split,
+  body.embed .demographic-grid,
+  body.embed .holloway-topline,
+  body.embed .mini-flow {
+    grid-template-columns: 1fr;
   }
+  body.embed #pit-map { height: 340px !important; }
 }
+@media (max-width: 600px) {
+  body.embed .tabs { gap:5px; padding:7px 10px; }
+  body.embed .tab { padding:7px 11px; font-size:12px; }
+  body.embed .main { padding:10px 10px 20px; }
+  body.embed #pit-map { height:280px !important; }
+}
+/* embed tab wrapping now handled in body.embed block above */
 
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -1138,7 +1166,11 @@ body.embed .foot {
 <script>
   (function () {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('embed') === 'true') {
+    // Activate embed mode if ?embed=true OR if loaded inside an iframe
+    const inIframe = (function() {
+      try { return window.self !== window.top; } catch(e) { return true; }
+    })();
+    if (params.get('embed') === 'true' || inIframe) {
       document.body.classList.add('embed');
     }
   })();
@@ -2423,6 +2455,36 @@ function initExpandableKPIs() {
   function onReady() { setTimeout(initExpandableKPIs, 200); }
   if (document.readyState === 'complete' || document.readyState === 'interactive') onReady();
   else document.addEventListener('DOMContentLoaded', onReady);
+})();
+
+
+// ── IFRAME HEIGHT REPORTING ──
+// Posts document height to parent so the embedding iframe can auto-size
+(function() {
+  function reportHeight() {
+    var h = document.documentElement.scrollHeight;
+    try {
+      window.parent.postMessage({ type: 'weho-dashboard-height', height: h }, '*');
+    } catch(e) {}
+  }
+  // Report on load, tab switch, and resize
+  window.addEventListener('load', function() { setTimeout(reportHeight, 300); });
+  window.addEventListener('resize', function() { setTimeout(reportHeight, 150); });
+  // Observe DOM changes (chart renders, expand/collapse)
+  if (typeof ResizeObserver !== 'undefined') {
+    var ro = new ResizeObserver(function() { setTimeout(reportHeight, 100); });
+    ro.observe(document.body);
+  }
+  // Hook into activatePage
+  var _origReport = window._dashHeightHooked;
+  if (!_origReport) {
+    window._dashHeightHooked = true;
+    document.addEventListener('click', function(e) {
+      if (e.target.closest && e.target.closest('.tab')) {
+        setTimeout(reportHeight, 400);
+      }
+    });
+  }
 })();
 
 </script>

@@ -3771,6 +3771,17 @@ function hclAggregateSelected() {
       for (var i=0;i<7;i++) agg.dow[i]      += d.dow[i];
     }
   });
+
+  // When the reason filter is active, keep the reason summary arrays aligned
+  // with the filtered view. Without this, the reason summary cards continue
+  // to calculate from the full, unfiltered reason mix even though the KPIs,
+  // monthly chart, outcomes, time, and day-of-week charts are filtered.
+  if (_hclSelectedReasons.size > 0) {
+    agg.reasons = agg.reasons.map(function(v, i) {
+      return _hclSelectedReasons.has(i) ? v : 0;
+    });
+  }
+
   return agg;
 }
 function hclRenderAll() {
@@ -3899,9 +3910,13 @@ function hclRenderAll() {
     : 'Requests per day; July is a partial month.';
 
   var reasonsNoteEl = document.getElementById('hcl-reasons-note');
-  if (reasonsNoteEl) reasonsNoteEl.textContent = reasonFilterActive
-    ? 'Showing selected reason' + (_hclSelectedReasons.size > 1 ? 's' : '') + ': ' + reasonLabel + '.'
-    : 'Approximately 91% of requests are care-oriented.';
+  if (reasonsNoteEl) {
+    var careOrientedTotal = (agg.reasons[0] || 0) + (agg.reasons[1] || 0) + (agg.reasons[2] || 0) + (agg.reasons[3] || 0);
+    var careOrientedPct = agg.total > 0 ? Math.round(careOrientedTotal / agg.total * 100) : 0;
+    reasonsNoteEl.textContent = reasonFilterActive
+      ? 'Approximately ' + careOrientedPct + '% of filtered requests are care-oriented. Showing selected reason' + (_hclSelectedReasons.size > 1 ? 's' : '') + ': ' + reasonLabel + '.'
+      : 'Approximately ' + careOrientedPct + '% of requests are care-oriented.';
+  }
 
   var outcomesNoteEl = document.getElementById('hcl-outcomes-note');
   var acceptedEl = document.getElementById('hcl-kpi-accepted');
